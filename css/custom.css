@@ -3346,3 +3346,131 @@ body {
 }
 
 body.has-modal-open { overflow: hidden; }
+
+/* ============================================================
+   CONTATO — split heads + form-aside + social tiles
+   ============================================================ */
+
+/* Split section head: eyebrow+h2 on the left, lead inline on the right */
+.section-head-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-6);
+  align-items: end;
+  margin-bottom: var(--s-12);
+}
+@media (min-width: 900px) {
+  .section-head-split { grid-template-columns: 1.1fr 1fr; gap: var(--s-12); }
+}
+.section-head-split .section-eyebrow { margin-bottom: var(--s-4); }
+.section-head-split .section-title { margin: 0; max-width: 22ch; }
+.section-head-split .section-lead { margin: 0; max-width: 52ch; }
+@media (min-width: 900px) {
+  .section-head-split .section-lead { padding-bottom: 4px; }
+}
+
+/* Contact form 2-col grid: info aside left, form card right */
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-10);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .contact-form-grid { grid-template-columns: 1fr 1.15fr; gap: var(--s-12); }
+}
+
+.form-aside { display: flex; flex-direction: column; gap: var(--s-8); }
+
+.form-aside-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  counter-reset: step;
+}
+.form-aside-steps li {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--s-4);
+  align-items: start;
+}
+.form-aside-steps li::before {
+  counter-increment: step;
+  content: counter(step, decimal-leading-zero);
+  width: 40px; height: 40px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  color: var(--brand-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 var(--fs-small) var(--font-display);
+  letter-spacing: -0.01em;
+}
+.form-aside-step-title {
+  font: 600 var(--fs-body) var(--font-text);
+  color: var(--brand-ink);
+  margin: 6px 0 4px;
+}
+.form-aside-step-desc {
+  font-size: var(--fs-small);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: var(--lh-body);
+}
+
+.form-aside-trust {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: var(--s-3);
+  align-items: start;
+  padding: var(--s-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.form-aside-trust svg { color: var(--brand-red); margin-top: 2px; }
+.form-aside-trust p { margin: 0; font-size: var(--fs-small); color: var(--text-muted); line-height: var(--lh-body); }
+.form-aside-trust strong { color: var(--brand-ink); display: block; margin-bottom: 4px; font-weight: 600; }
+
+/* Social tiles — square, larger, sits inline with section head */
+.socials-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-3);
+  width: 100%;
+}
+.social-tile {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  text-decoration: none;
+  color: var(--brand-ink);
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+}
+.social-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+.social-tile svg {
+  width: 32px;
+  height: 32px;
+  color: var(--brand-ink);
+  transition: color 200ms ease-out;
+}
+.social-tile:hover svg { color: var(--brand-red); }
+.social-tile-label { font: 600 var(--fs-small) var(--font-text); }
+@media (max-width: 640px) {
+  .socials-tiles { grid-template-columns: repeat(2, 1fr); }
+}

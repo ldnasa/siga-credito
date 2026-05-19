@@ -86,9 +86,13 @@
   <!-- CANAIS -->
   <section class="block block-surface">
     <div class="container">
-      <span class="section-eyebrow">WhatsApp por produto</span>
-      <h2 class="section-title text-balance">Quatro linhas, quatro especialistas</h2>
-      <p class="section-lead">Cada produto tem uma equipe dedicada. Escolhe o WhatsApp do empréstimo que te interessa, fala direto com quem entende.</p>
+      <div class="section-head-split">
+        <div>
+          <span class="section-eyebrow">WhatsApp por produto</span>
+          <h2 class="section-title text-balance">Quatro linhas, quatro especialistas</h2>
+        </div>
+        <p class="section-lead">Cada produto tem uma equipe dedicada. Escolhe o WhatsApp do empréstimo que te interessa, fala direto com quem entende.</p>
+      </div>
 
       <div class="channel-list" data-reveal-group>
         <article class="channel reveal">
@@ -139,12 +143,40 @@
 
   <!-- FORMULÁRIO -->
   <section class="block block-surface-2">
-    <div class="container" style="max-width: 720px;">
+    <div class="container">
       <span class="section-eyebrow">Formulário</span>
       <h2 class="section-title text-balance">Prefere ser contatado?</h2>
       <p class="section-lead">Preenche aí que a gente te chama no WhatsApp em até 1 hora.</p>
 
-      <form data-form class="card" style="padding: var(--s-8); display: flex; flex-direction: column; gap: var(--s-5);" novalidate>
+      <div class="contact-form-grid">
+        <aside class="form-aside">
+          <ol class="form-aside-steps">
+            <li>
+              <div>
+                <p class="form-aside-step-title">A gente recebe na hora.</p>
+                <p class="form-aside-step-desc">Sua mensagem vai direto pra equipe do produto certo. Sem fila de chatbot, sem ticket genérico.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <p class="form-aside-step-title">Chamamos no WhatsApp.</p>
+                <p class="form-aside-step-desc">Em até 1 hora útil, um especialista do produto que você marcou. Atendimento humano de gente que mora em Londrina.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <p class="form-aside-step-title">Simula sem compromisso.</p>
+                <p class="form-aside-step-desc">Você vê o valor, a parcela, o prazo. Se fizer sentido, segue. Se não, beleza. Sem taxa adiantada, sem amarração.</p>
+              </div>
+            </li>
+          </ol>
+          <div class="form-aside-trust">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <p><strong>Seus dados ficam com a gente.</strong>Não vendemos lista, não repassamos pra terceiro. Tudo dentro da LGPD e da política de privacidade.</p>
+          </div>
+        </aside>
+
+        <form data-form class="card" style="padding: var(--s-8); display: flex; flex-direction: column; gap: var(--s-5);" novalidate>
         <div class="form-row two-col">
           <div class="field">
             <label class="input-label field-required" for="nome">Nome completo</label>
@@ -193,6 +225,7 @@
         </button>
         <p data-form-status hidden style="color: var(--cta-green-deep); font: 600 var(--fs-small) var(--font-text); text-align: center;"></p>
       </form>
+      </div>
     </div>
   </section>
 
@@ -227,28 +260,31 @@
 
   <!-- REDES -->
   <section class="block block-surface-2">
-    <div class="container measure-wide">
-      <span class="section-eyebrow">Redes sociais</span>
-      <h2 class="section-title text-balance">Acompanhe a gente nas redes</h2>
-      <p class="section-lead">Conteúdo direto sobre crédito, dívida e finanças pessoais. Sem influencer making it up.</p>
-
-      <div class="socials">
-        <a class="social-pill" href="#" rel="noopener" target="_blank">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          Instagram
-        </a>
-        <a class="social-pill" href="#" rel="noopener" target="_blank">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          Facebook
-        </a>
-        <a class="social-pill" href="#" rel="noopener" target="_blank">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
-          YouTube
-        </a>
-        <a class="social-pill" href="#" rel="noopener" target="_blank">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-          TikTok
-        </a>
+    <div class="container">
+      <div class="section-head-split">
+        <div>
+          <span class="section-eyebrow">Redes sociais</span>
+          <h2 class="section-title text-balance">Acompanhe a gente nas redes</h2>
+          <p class="section-lead" style="margin-top: var(--s-6);">Conteúdo direto sobre crédito, dívida e finanças pessoais. Sem influencer making it up.</p>
+        </div>
+        <div class="socials-tiles">
+          <a class="social-tile" href="#" rel="noopener" target="_blank" aria-label="Instagram da Siga Crédito">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <span class="social-tile-label">Instagram</span>
+          </a>
+          <a class="social-tile" href="#" rel="noopener" target="_blank" aria-label="Facebook da Siga Crédito">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            <span class="social-tile-label">Facebook</span>
+          </a>
+          <a class="social-tile" href="#" rel="noopener" target="_blank" aria-label="YouTube da Siga Crédito">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            <span class="social-tile-label">YouTube</span>
+          </a>
+          <a class="social-tile" href="#" rel="noopener" target="_blank" aria-label="TikTok da Siga Crédito">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+            <span class="social-tile-label">TikTok</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
