@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60" role="img" aria-label="Presença Bank">
+  <style>
+    text { font-family: 'Geist', 'General Sans', system-ui, sans-serif; font-weight: 700; fill: #1E1E1F; }
+    .a { font-size: 32px; letter-spacing: -0.025em; }
+    .b { font-size: 14px; font-weight: 500; letter-spacing: 0.18em; opacity: .65; }
+  </style>
+  <text x="0" y="34" class="a">Presença</text>
+  <text x="0" y="54" class="b">BANK</text>
+</svg>
