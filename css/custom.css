@@ -3374,8 +3374,9 @@ body.has-modal-open { overflow: hidden; }
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--s-10);
-  align-items: center;
+  align-items: start;
 }
+.contact-form-grid > .form-aside { padding-top: var(--s-8); }
 @media (min-width: 900px) {
   .contact-form-grid { grid-template-columns: 1fr 1.15fr; gap: var(--s-12); }
 }
