@@ -1010,7 +1010,7 @@
 .cta-center .section-eyebrow { justify-content: center; }
 .cta-center .section-title { max-width: 26ch; margin: 0 auto; }
 .cta-center .section-lead { max-width: 56ch; margin: 0 auto; }
-.cta-center .cta-row-actions { justify-content: center; align-items: center; margin-top: var(--s-3); }
+.cta-center .cta-row-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); justify-content: center; align-items: center; margin-top: var(--s-3); }
 .cta-center .cta-row-actions .btn { vertical-align: middle; align-self: center; }
 .cta-center-trust {
   list-style: none;
@@ -2528,6 +2528,7 @@
   .fraud-band-body { text-align: center; margin-left: auto; margin-right: auto; }
   .fraud-band-actions { justify-content: center; }
   .fraud-pillars { text-align: center; }
+  .fraud-pillar { flex-direction: column; align-items: center; gap: var(--s-2); }
 }
 
 /* Pillars list inside fraud band (3 mini claims) */
@@ -3537,23 +3538,27 @@ body.has-modal-open { overflow: hidden; }
     gap: var(--s-4);
   }
 
-  /* Section heads — text alignment */
+  /* Section heads — text alignment + 16px gap padrão entre eyebrow/h2/lead */
   .block .section-eyebrow,
   .block .section-title,
   .block .section-lead {
     text-align: center;
   }
-  .block .section-title,
-  .block .section-lead {
-    margin-left: auto;
-    margin-right: auto;
-  }
+  .block .section-eyebrow { margin-bottom: var(--s-4); }
+  .block .section-title { margin-bottom: var(--s-4); margin-left: auto; margin-right: auto; }
+  .block .section-lead { margin-bottom: var(--s-6); margin-left: auto; margin-right: auto; }
 
   /* Section-head-row (title left + link right on desktop) → stacked centered */
   .section-head-row {
     justify-content: center;
     text-align: center;
+    gap: 0;
+    margin-bottom: var(--s-6);
   }
+  /* lead <p> herda margin-top 1em do user-agent — zerar */
+  .block .section-lead { margin-top: 0; }
+  .section-head-row .section-lead,
+  .section-head-split .section-lead { margin-top: 0; }
 
   /* Section-head-split (eyebrow+h2 esq, lead dir on desktop) → centered */
   .section-head-split { text-align: center; }
@@ -3600,4 +3605,65 @@ body.has-modal-open { overflow: hidden; }
     flex: 0 0 88%;
     scroll-snap-align: start;
   }
+
+  /* Bora resolver — checklist com check+texto left dentro de cada row, lista centrada como bloco */
+  .cta-center-trust {
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .cta-center-trust li { align-items: flex-start; }
+  .cta-center-trust li svg { margin-top: 5px; }
+
+  /* Rodapé centralizado por completo no mobile */
+  .footer-anti-fraud {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .footer-grid { text-align: center; }
+  .footer-brand { display: flex; flex-direction: column; align-items: center; }
+  .footer-brand p { max-width: none; margin-inline: auto; }
+  .footer-col ul { align-items: center; }
+  .footer-reg { text-align: center; }
+  .footer-bottom {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  .footer-bottom-meta,
+  .footer-legal { justify-content: center; }
+
+  /* Blog list (Conteúdos complementares) — vira carrossel de cards verticais */
+  .editorial-v2-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: var(--s-3);
+    padding-bottom: var(--s-4);
+    margin-inline: calc(var(--container-pad) * -1);
+    padding-inline: var(--container-pad);
+  }
+  .editorial-v2-list::-webkit-scrollbar { display: none; }
+  .editorial-v2-list li {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
+  .editorial-v2-list a {
+    grid-template-columns: 1fr;
+    padding: 0;
+    padding-bottom: var(--s-4);
+    align-items: stretch;
+  }
+  .editorial-v2-list-thumb {
+    aspect-ratio: 16/10;
+    border-radius: 0;
+  }
+  .editorial-v2-list-meta { padding-inline: var(--s-4); margin-top: var(--s-4); }
+  .editorial-v2-list-title { padding-inline: var(--s-4); }
 }
