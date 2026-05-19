@@ -2825,7 +2825,7 @@ body {
   font-size: clamp(2.5rem, 5.5vw, 4.5rem);
   max-width: 16ch;
   line-height: 1;
-  margin: 0;
+  margin: 0 0 var(--s-4);
 }
 .hero-text-block .hero-headline em {
   font-style: normal;
@@ -2835,7 +2835,7 @@ body {
   font: 400 var(--fs-lead)/var(--lh-body) var(--font-text);
   color: var(--text-muted);
   max-width: 48ch;
-  margin: 0;
+  margin: 0 0 var(--s-4);
 }
 
 .hero-photo-block {
