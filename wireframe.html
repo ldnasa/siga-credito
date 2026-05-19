@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — Siga Crédito</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: 'Inter', Arial, sans-serif; background: #f7f7f7; color: #222; }
+  .wf-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; }
+  .wf-placeholder { background: #e9e9e9; border: 1px dashed #c4c4c4; display: flex; align-items: center; justify-content: center; color: #888; font-size: 0.85rem; border-radius: 6px; }
+  .wf-btn-filled { background: #333; color: #fff; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 500; border: none; cursor: pointer; transition: background 0.15s; display: inline-flex; align-items: center; gap: 0.5rem; }
+  .wf-btn-filled:hover { background: #555; }
+  .wf-btn-outline { background: transparent; color: #333; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 500; border: 1px solid #333; cursor: pointer; transition: background 0.15s; display: inline-flex; align-items: center; gap: 0.5rem; }
+  .wf-btn-outline:hover { background: #f0f0f0; }
+  .wf-section { padding: 3rem 0; border-bottom: 1px solid #eee; }
+  .wf-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #999; font-weight: 600; margin-bottom: 0.5rem; }
+  .nav-link { padding: 0.5rem 0.6rem; cursor: pointer; color: #555; font-size: 0.875rem; border-radius: 4px; transition: background 0.15s; white-space: nowrap; }
+  .nav-link:hover { background: #f0f0f0; }
+  .nav-link.active { background: #333; color: #fff; }
+  .dropdown-item { display: block; padding: 0.6rem 1rem; cursor: pointer; font-size: 0.875rem; color: #444; transition: background 0.15s; }
+  .dropdown-item:hover { background: #f7f7f7; }
+  .hidden { display: none; }
+  .accordion-item { border-bottom: 1px solid #eee; }
+  .accordion-header { padding: 1rem 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
+  .accordion-content { padding: 0 0 1rem 0; color: #666; font-size: 0.9rem; line-height: 1.6; display: none; }
+  .accordion-item.open .accordion-content { display: block; }
+  .accordion-item.open .accordion-icon { transform: rotate(45deg); }
+  .accordion-icon { transition: transform 0.2s; font-size: 1.2rem; color: #999; }
+  .product-card { transition: border-color 0.15s, transform 0.15s; cursor: pointer; }
+  .product-card:hover { border-color: #333; transform: translateY(-2px); }
+  .floating-wpp { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #333; color: #fff; padding: 1rem; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 50; font-size: 1.5rem; transition: transform 0.15s; }
+  .floating-wpp:hover { transform: scale(1.05); }
+  .ribbon-warning { background: #fafafa; border-left: 3px solid #999; padding: 1.5rem; border-radius: 4px; }
+  .stat-number { font-size: 2.5rem; font-weight: 700; color: #222; line-height: 1; }
+  .stat-label { font-size: 0.85rem; color: #888; margin-top: 0.5rem; }
+  .cta-bar { background: #fafafa; border: 1px solid #e5e5e5; padding: 0.5rem 1rem; border-radius: 4px; font-size: 0.8rem; color: #666; display: inline-block; }
+  table.wf-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  table.wf-table th, table.wf-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #eee; }
+  table.wf-table th { background: #fafafa; font-weight: 600; color: #555; }
+  .breadcrumb { font-size: 0.8rem; color: #888; margin-bottom: 1rem; }
+  .breadcrumb span { cursor: pointer; }
+  .breadcrumb span:hover { color: #333; }
+</style>
+</head>
+<body>
+
+<!-- ============== HEADER FIXO ============== -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-6 min-w-0">
+      <span class="font-bold text-base cursor-pointer whitespace-nowrap" onclick="navigateToPage('home')">[ LOGO Siga Crédito ]</span>
+      <nav class="hidden lg:flex gap-0 items-center">
+        <span class="nav-link" onclick="navigateToPage('home')" data-page="home">Home</span>
+        <div class="relative" id="dropdown-wrapper">
+          <span class="nav-link flex items-center gap-1" onclick="toggleDropdown(event)" id="dropdown-trigger" data-page-group="produtos">
+            Empréstimos
+            <span class="text-xs">▾</span>
+          </span>
+          <div class="dropdown-menu hidden absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-md min-w-[220px] py-2 z-50" id="dropdown-menu">
+            <span class="dropdown-item" onclick="navigateToPage('conta-luz'); closeDropdown();">
+              <span class="block font-medium">Conta de Luz</span>
+              <span class="block text-xs text-gray-500">De R$ 400 a R$ 4.000</span>
+            </span>
+            <span class="dropdown-item" onclick="navigateToPage('bolsa-familia'); closeDropdown();">
+              <span class="block font-medium">Bolsa Família</span>
+              <span class="block text-xs text-gray-500">Até R$ 700</span>
+            </span>
+            <span class="dropdown-item" onclick="navigateToPage('clt'); closeDropdown();">
+              <span class="block font-medium">CLT (Consignado)</span>
+              <span class="block text-xs text-gray-500">De R$ 1.000 a R$ 25.000</span>
+            </span>
+            <span class="dropdown-item" onclick="navigateToPage('fgts'); closeDropdown();">
+              <span class="block font-medium">FGTS Saque-Aniversário</span>
+              <span class="block text-xs text-gray-500">De R$ 100 a R$ 29.000</span>
+            </span>
+          </div>
+        </div>
+        <span class="nav-link" onclick="navigateToPage('blog')" data-page="blog">Blog</span>
+        <span class="nav-link" onclick="navigateToPage('sobre')" data-page="sobre">Sobre</span>
+        <span class="nav-link" onclick="navigateToPage('contato')" data-page="contato">Contato</span>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3 flex-shrink-0">
+      <span class="hidden xl:inline text-sm text-gray-600 whitespace-nowrap">📞 0800 591 4204</span>
+      <span class="wf-btn-filled text-sm whitespace-nowrap" onclick="alert('CTA: abrir WhatsApp principal')">Simular agora</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============== PÁGINA: HOME ============== -->
+<main id="page-home" class="page-content">
+
+  <!-- Hero -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="wf-section-label">Hero Institucional</div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Quando o banco diz não, a gente responde.</h1>
+          <p class="text-lg text-gray-700 mb-3">Desde 2020 ajudando trabalhador, beneficiário e quem precisa de uma virada. Dinheiro no Pix em até 24h, mesmo com nome sujo.</p>
+          <p class="text-base text-gray-600 mb-6">Score baixo, sem holerite, restrição no CPF? A gente trabalha com financeiras que olham além disso. Tudo digital, sem fila, sem vergonha.</p>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <span class="wf-btn-filled" onclick="alert('CTA: abrir WhatsApp da Siga')">Simular pelo WhatsApp →</span>
+            <span class="wf-btn-outline" onclick="navigateToPage('contato')">Quero ser contatado</span>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="cta-bar">✓ Correspondente bancário regulamentado</span>
+            <span class="cta-bar">✓ + R$ 150 milhões em empréstimos desde 2020</span>
+          </div>
+        </div>
+        <div class="wf-placeholder h-80">[ imagem real: atendente + WhatsApp ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seletor de Produto -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Seletor de Produto (auto-segmentação)</div>
+      <h2 class="text-3xl font-bold mb-2">Qual é o seu caso?</h2>
+      <p class="text-gray-600 mb-8">Cada situação tem o crédito certo. Escolhe o seu pra ver os detalhes e simular.</p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="wf-card product-card p-6" onclick="navigateToPage('conta-luz')">
+          <div class="text-2xl mb-3">💡</div>
+          <h3 class="font-bold mb-2">Empréstimo na Conta de Luz</h3>
+          <p class="text-sm text-gray-600 mb-3">Pague junto com a energia.</p>
+          <p class="text-sm font-semibold mb-4">De R$ 400 a R$ 4.000</p>
+          <span class="text-sm text-gray-700 underline">Quero esse →</span>
+        </div>
+        <div class="wf-card product-card p-6" onclick="navigateToPage('bolsa-familia')">
+          <div class="text-2xl mb-3">👨‍👩‍👧</div>
+          <h3 class="font-bold mb-2">Bolsa Família</h3>
+          <p class="text-sm text-gray-600 mb-3">Sem desconto no benefício.</p>
+          <p class="text-sm font-semibold mb-4">Até R$ 700</p>
+          <span class="text-sm text-gray-700 underline">Quero esse →</span>
+        </div>
+        <div class="wf-card product-card p-6" onclick="navigateToPage('clt')">
+          <div class="text-2xl mb-3">💼</div>
+          <h3 class="font-bold mb-2">CLT (Consignado Privado)</h3>
+          <p class="text-sm text-gray-600 mb-3">Desconto direto no salário.</p>
+          <p class="text-sm font-semibold mb-4">De R$ 1.000 a R$ 25.000</p>
+          <span class="text-sm text-gray-700 underline">Quero esse →</span>
+        </div>
+        <div class="wf-card product-card p-6" onclick="navigateToPage('fgts')">
+          <div class="text-2xl mb-3">🏦</div>
+          <h3 class="font-bold mb-2">FGTS Saque-Aniversário</h3>
+          <p class="text-sm text-gray-600 mb-3">Antecipe até 10 anos.</p>
+          <p class="text-sm font-semibold mb-4">De R$ 100 a R$ 29.000</p>
+          <span class="text-sm text-gray-700 underline">Quero esse →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Como Funciona</div>
+      <h2 class="text-3xl font-bold mb-8">Do "preciso de dinheiro" ao Pix em 4 passos</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">01</div>
+          <h3 class="font-bold mb-2">SIMULE</h3>
+          <p class="text-sm text-gray-600">Manda mensagem no WhatsApp ou liga no 0800. Em minutos sai sua proposta.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">02</div>
+          <h3 class="font-bold mb-2">ENVIE OS DOCUMENTOS</h3>
+          <p class="text-sm text-gray-600">RG ou CNH e os documentos do produto escolhido. Tudo pelo celular.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">03</div>
+          <h3 class="font-bold mb-2">ASSINE PELO APP</h3>
+          <p class="text-sm text-gray-600">Baixe o aplicativo do banco parceiro e assine o contrato com biometria facial.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">04</div>
+          <h3 class="font-bold mb-2">RECEBA</h3>
+          <p class="text-sm text-gray-600">Dinheiro cai no Pix da sua conta. E você resolve.</p>
+        </div>
+      </div>
+      <div class="mt-8">
+        <span class="wf-btn-filled" onclick="navigateToPage('contato')">Começar agora →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prova Social Numérica -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Prova Social Numérica</div>
+      <h2 class="text-3xl font-bold mb-8">Em 6 anos de operação</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="wf-card p-6 text-center">
+          <div class="stat-number" data-counter data-target="150" data-prefix="R$ " data-suffix="mi+">R$ 0mi+</div>
+          <div class="stat-label">em empréstimos intermediados</div>
+        </div>
+        <div class="wf-card p-6 text-center">
+          <div class="stat-number">2020</div>
+          <div class="stat-label">fundada em</div>
+        </div>
+        <div class="wf-card p-6 text-center">
+          <div class="stat-number" data-counter data-target="1000" data-suffix="">0</div>
+          <div class="stat-label">atendimentos por dia</div>
+        </div>
+        <div class="wf-card p-6 text-center">
+          <div class="stat-number" data-counter data-target="1" data-suffix=" milhão+">0</div>
+          <div class="stat-label">pedidos analisados</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bancos Parceiros -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <div class="wf-section-label">Bancos Parceiros</div>
+      <h2 class="text-2xl font-bold mb-2">Trabalhamos só com financeiras autorizadas pelo Banco Central</h2>
+      <p class="text-gray-600 mb-8 max-w-2xl mx-auto">Como correspondente bancário, intermediamos crédito de instituições reguladas. Você assina direto no app delas, com a segurança que o sistema financeiro exige.</p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="wf-placeholder h-16">[ logo Crefaz ]</div>
+        <div class="wf-placeholder h-16">[ logo Crefisa ]</div>
+        <div class="wf-placeholder h-16">[ logo Novo SAC ]</div>
+        <div class="wf-placeholder h-16">[ logo Presença Bank ]</div>
+        <div class="wf-placeholder h-16">[ logo V8 ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Depoimentos</div>
+      <h2 class="text-3xl font-bold mb-2">Histórias reais. Pessoas reais.</h2>
+      <p class="text-gray-600 mb-8">Quem precisou virar a chave e conseguiu.</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print WhatsApp ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder — frase real do cliente sobre como o empréstimo ajudou ]"</p>
+          <p class="text-sm font-semibold">[ Nome real ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print WhatsApp ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder — frase real do cliente ]"</p>
+          <p class="text-sm font-semibold">[ Nome real ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print WhatsApp ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder — frase real do cliente ]"</p>
+          <p class="text-sm font-semibold">[ Nome real ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aviso Anti-Golpe -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="ribbon-warning">
+        <div class="wf-section-label">Aviso Anti-Golpe</div>
+        <h2 class="text-2xl font-bold mb-3">🛡️ A gente nunca pede dinheiro adiantado. Nunca.</h2>
+        <p class="text-gray-700 mb-4">Se alguém em nome da Siga te pedir taxa de liberação, pagamento via Pix antes do empréstimo cair, ou cartão de crédito pra "garantia", é golpe. Denuncia e bloqueia. Nosso pagamento é uma comissão paga pela financeira. Você não paga nada pra falar com a gente.</p>
+        <span class="wf-btn-outline text-sm" onclick="navigateToPage('contato')">Falar direto com nossa equipe oficial</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog em destaque -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Blog em Destaque</div>
+      <div class="flex justify-between items-end mb-8 flex-wrap gap-4">
+        <div>
+          <h2 class="text-3xl font-bold mb-2">Aprenda antes de pegar emprestado</h2>
+          <p class="text-gray-600">Conteúdo direto sobre crédito, dívidas e como tomar a melhor decisão pro seu bolso.</p>
+        </div>
+        <span class="wf-btn-outline text-sm" onclick="navigateToPage('blog')">Ver todos os artigos →</span>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-card overflow-hidden cursor-pointer" onclick="navigateToPage('blog')">
+          <div class="wf-placeholder h-40">[ imagem destaque ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">CONTA DE LUZ • 4 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post 1 ]</h3>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+        <div class="wf-card overflow-hidden cursor-pointer" onclick="navigateToPage('blog')">
+          <div class="wf-placeholder h-40">[ imagem destaque ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">EDUCAÇÃO FINANCEIRA • 6 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post 2 ]</h3>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+        <div class="wf-card overflow-hidden cursor-pointer" onclick="navigateToPage('blog')">
+          <div class="wf-placeholder h-40">[ imagem destaque ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">FGTS • 5 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post 3 ]</h3>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <div class="wf-section-label">CTA Final</div>
+      <h2 class="text-3xl font-bold mb-2">Bora resolver isso?</h2>
+      <p class="text-gray-600 mb-8">Escolhe o canal que você prefere. A gente responde em minutos.</p>
+      <div class="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div class="wf-card p-6 text-center">
+          <div class="text-3xl mb-3">📱</div>
+          <h3 class="font-bold mb-2">WHATSAPP</h3>
+          <p class="text-sm text-gray-600 mb-4">Atendimento 24h, 7 dias por semana</p>
+          <span class="wf-btn-outline text-sm" onclick="alert('CTA: WhatsApp')">Falar agora</span>
+        </div>
+        <div class="wf-card p-6 text-center">
+          <div class="text-3xl mb-3">📞</div>
+          <h3 class="font-bold mb-2">0800 591 4204</h3>
+          <p class="text-sm text-gray-600 mb-4">Atendente humano, ligação gratuita</p>
+          <span class="wf-btn-outline text-sm" onclick="alert('CTA: ligar')">Ligar</span>
+        </div>
+        <div class="wf-card p-6 text-center" style="border: 2px solid #333;">
+          <div class="text-3xl mb-3">✉️</div>
+          <h3 class="font-bold mb-2">FORMULÁRIO</h3>
+          <p class="text-sm text-gray-600 mb-4">Deixa seu contato que a gente chama no WhatsApp</p>
+          <span class="wf-btn-filled text-sm" onclick="navigateToPage('contato')">Quero ser contatado</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: CONTA DE LUZ ============== -->
+<main id="page-conta-luz" class="page-content hidden">
+
+  <!-- Hero -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › Conta de Luz</div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="wf-section-label">Hero — Conta de Luz</div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Pegue dinheiro no Pix e pague na conta de luz</h1>
+          <p class="text-lg text-gray-700 mb-3">De R$ 400 a R$ 4.000 em até 24h, com a parcela junto da fatura de energia. Sem boleto extra, sem dor de cabeça.</p>
+          <p class="text-base text-gray-600 mb-6">Funciona até pra quem tem nome sujo. Se a conta de luz tá no seu CPF e você consegue pagar a fatura todo mês, dá pra simular agora.</p>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <span class="wf-btn-filled" onclick="alert('CTA: WhatsApp Conta de Luz')">Simular pelo WhatsApp →</span>
+            <span class="wf-btn-outline" onclick="navigateToPage('contato')">Quero ser contatado</span>
+          </div>
+          <div class="flex flex-col gap-2 text-sm">
+            <span>✓ Aprovação até pra negativado</span>
+            <span>✓ Sem comprovar renda</span>
+            <span>✓ Dinheiro no Pix em até 24h</span>
+          </div>
+        </div>
+        <div class="wf-placeholder h-80">[ imagem real: pessoa com conta de luz + Pix ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Verificador de Concessionária -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Verificador de Concessionária</div>
+      <h2 class="text-3xl font-bold mb-2">Sua conta de luz é uma destas?</h2>
+      <p class="text-gray-600 mb-8">A gente trabalha com as principais concessionárias do país. Confere se a sua tá na lista.</p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+        <div class="wf-placeholder h-20">[ Copel — a confirmar ]</div>
+        <div class="wf-placeholder h-20">[ CPFL ]</div>
+        <div class="wf-placeholder h-20">[ RGE ]</div>
+        <div class="wf-placeholder h-20">[ Enel ]</div>
+        <div class="wf-placeholder h-20">[ Neoenergia ]</div>
+      </div>
+      <p class="text-sm text-gray-600 mb-4">Não achou a sua? Fala com a gente mesmo assim. A lista de concessionárias atendidas tá sempre crescendo.</p>
+      <span class="wf-btn-outline" onclick="navigateToPage('contato')">Verificar minha concessionária →</span>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Como Funciona</div>
+      <h2 class="text-3xl font-bold mb-8">Do simulador ao Pix em 4 passos</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">01</div>
+          <h3 class="font-bold mb-2">SIMULE</h3>
+          <p class="text-sm text-gray-600">Manda mensagem no WhatsApp ou liga no 0800. Você descobre o quanto pode pegar e quanto vai pagar.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">02</div>
+          <h3 class="font-bold mb-2">ENVIE</h3>
+          <p class="text-sm text-gray-600">RG ou CNH e a conta de luz mais recente (paga, em dia). Tudo pelo celular.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">03</div>
+          <h3 class="font-bold mb-2">ASSINE</h3>
+          <p class="text-sm text-gray-600">Baixe o app do banco parceiro e assine o contrato com biometria facial. Em poucos minutos.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">04</div>
+          <h3 class="font-bold mb-2">RECEBA</h3>
+          <p class="text-sm text-gray-600">Dinheiro cai no Pix da sua conta bancária. Parcela vai junto com a próxima fatura de energia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vantagens -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Vantagens</div>
+      <h2 class="text-3xl font-bold mb-8">Por que esse empréstimo dá certo</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">🔒</div>
+          <h3 class="font-bold mb-2">SEGURO</h3>
+          <p class="text-sm text-gray-600">Biometria facial e contrato assinado direto no app do banco parceiro.</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">⚡</div>
+          <h3 class="font-bold mb-2">RÁPIDO</h3>
+          <p class="text-sm text-gray-600">Dinheiro no Pix em até 24h após a assinatura do contrato.</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">📋</div>
+          <h3 class="font-bold mb-2">SIMPLES</h3>
+          <p class="text-sm text-gray-600">Só precisa de RG (ou CNH) e da conta de energia paga.</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">📱</div>
+          <h3 class="font-bold mb-2">100% ONLINE</h3>
+          <p class="text-sm text-gray-600">Da simulação à assinatura, tudo pelo celular.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Limites -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Limites e Prazos</div>
+      <h2 class="text-3xl font-bold mb-8">Quanto dá pra pegar?</h2>
+      <table class="wf-table mb-6">
+        <tr><th>VALOR</th><td>De R$ 400 a R$ 4.000</td></tr>
+        <tr><th>PRAZO</th><td>Em até 24 parcelas</td></tr>
+        <tr><th>IDADE</th><td>De 21 a 84 anos</td></tr>
+        <tr><th>APROVAÇÃO</th><td>Até pra quem tá negativado</td></tr>
+      </table>
+      <p class="text-gray-600 mb-6">Cada concessionária tem sua própria regra. O valor exato e o prazo final você descobre na simulação. Em minutos, sem compromisso.</p>
+      <span class="wf-btn-filled" onclick="navigateToPage('contato')">Descobrir quanto eu pego →</span>
+    </div>
+  </section>
+
+  <!-- Aviso Anti-Golpe -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="ribbon-warning">
+        <div class="wf-section-label">Aviso Anti-Golpe</div>
+        <h2 class="text-2xl font-bold mb-3">🛡️ Atenção: ninguém da Siga pede dinheiro adiantado</h2>
+        <p class="text-gray-700">Se alguém te pedir taxa de liberação, depósito antecipado ou pagamento de "imposto" pra liberar o empréstimo, é golpe. Bloqueia, denuncia e fala direto com nossos canais oficiais. A Siga ganha comissão da financeira — você não paga nada pra contratar conosco.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Depoimentos</div>
+      <h2 class="text-3xl font-bold mb-8">Quem já usou conta a história</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wf-section">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="wf-section-label">FAQ — Conta de Luz</div>
+      <h2 class="text-3xl font-bold mb-8">Perguntas que a gente responde todo dia</h2>
+      <div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quais documentos preciso ter?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">RG ou CNH + conta de energia atualizada. Só isso.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quando o dinheiro cai?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Após assinar o contrato no app, em até 24h o valor está no Pix da sua conta.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Onde recebo o dinheiro?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Na conta bancária do titular da conta de energia. Não fazemos depósito em conta de terceiros.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Qual o valor mínimo e máximo?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">De R$ 400 a R$ 4.000. O valor exato depende da regra da sua concessionária.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Posso fazer no nome de outra pessoa?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. Só o titular da conta de energia pode contratar.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Preciso assinar contrato?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Sim. Você assina direto no app do banco parceiro, com biometria facial.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Tem alguma taxa pra contratar?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. A Siga não cobra nada pra fazer a simulação ou o contrato. Nossa receita vem da comissão paga pela financeira.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Vai puxar consulta no SPC ou Serasa?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Sim, faz parte da análise. Mas mesmo quem tá negativado consegue contratar — o desconto na conta de luz é a garantia que torna isso possível.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Como pago as parcelas?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">A parcela do empréstimo vem somada na sua fatura de luz, todo mês. Sem boleto extra.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">E se eu atrasar o pagamento da conta de luz?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">A conta vai pra negativação e a luz pode ser cortada — igual qualquer outra conta de luz atrasada. Por isso, só contrate se tiver certeza que cabe no orçamento.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Não recebi o dinheiro, e agora?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Fala com a gente no WhatsApp ou 0800. A gente confere os dados e ajuda a resolver.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="wf-section-label">CTA Final</div>
+      <h2 class="text-3xl font-bold mb-2">Tá apertado? Vamos resolver</h2>
+      <p class="text-gray-600 mb-8">Em minutos você sabe quanto pode pegar. Sem compromisso, sem letra miúda.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="wf-btn-filled" onclick="navigateToPage('contato')">Quero ser contatado →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disclaimer Regulatório -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-card p-5 bg-gray-50">
+        <div class="wf-section-label mb-2">Informações regulatórias deste produto</div>
+        <p class="text-xs text-gray-600 leading-relaxed">As informações adicionais relativas ao Empréstimo Pessoal com Débito na Fatura de Energia: prazo de pagamento varia no mínimo de 8 a no máximo 22 meses, a taxa de juros praticada no produto de crédito pessoal é de 11,72% a.m. e o custo efetivo total (CET) será a partir de 12,67% a.m. A tarifa de cadastro (TAC) é de R$ 35,00. Ao solicitar uma proposta, serão exibidos a taxa de juros utilizada, a tarifa, o imposto (IOF) e o custo efetivo total (CET).</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: BOLSA FAMÍLIA ============== -->
+<main id="page-bolsa-familia" class="page-content hidden">
+
+  <!-- Hero -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › Bolsa Família</div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="wf-section-label">Hero — Bolsa Família</div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Bolsa Família: empréstimo seguro, sem desconto no benefício</h1>
+          <p class="text-lg text-gray-700 mb-3">Até R$ 700 em até 12 parcelas, debitadas direto no saldo da sua conta Caixa Tem. Sem desconto no benefício.</p>
+          <p class="text-base text-gray-600 mb-6">A gente trabalha com a Crefisa pra liberar empréstimo pessoal pra beneficiário do Bolsa Família. O dinheiro cai no Pix e você paga em parcelas pequenas, no valor que cabe.</p>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <span class="wf-btn-filled" onclick="alert('CTA: WhatsApp Bolsa Família')">Simular pelo WhatsApp →</span>
+            <span class="wf-btn-outline" onclick="navigateToPage('contato')">Quero ser contatado</span>
+          </div>
+          <div class="flex flex-col gap-2 text-sm">
+            <span>✓ 100% digital, pelo WhatsApp</span>
+            <span>✓ Sem desconto no benefício</span>
+            <span>✓ Liberação em até 48h</span>
+          </div>
+        </div>
+        <div class="wf-placeholder h-80">[ imagem real: pessoa com celular + WhatsApp ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Esclarecimento Regulatório -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-card p-8">
+        <div class="wf-section-label">Esclarecimento Regulatório</div>
+        <h2 class="text-2xl font-bold mb-4">ℹ️ Importante: esse empréstimo é diferente do antigo consignado</h2>
+        <p class="text-gray-700 mb-4">Em 2023 o Governo Federal suspendeu o empréstimo consignado descontado direto no benefício do Bolsa Família — e ele continua suspenso. O que a gente oferece é diferente: é um <strong>empréstimo pessoal</strong> da Crefisa, em que você recebe o dinheiro no Pix e paga as parcelas por débito no saldo da sua conta Caixa Tem. Seu benefício mensal continua chegando na íntegra.</p>
+        <span class="wf-btn-outline text-sm" onclick="navigateToPage('contato')">Entendi. Quero simular →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Como Funciona</div>
+      <h2 class="text-3xl font-bold mb-8">Em 4 passos o dinheiro tá no seu Pix</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">01</div>
+          <h3 class="font-bold mb-2">SIMULE</h3>
+          <p class="text-sm text-gray-600">Manda mensagem no WhatsApp. Você recebe a proposta na hora.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">02</div>
+          <h3 class="font-bold mb-2">ENVIE OS DOCUMENTOS</h3>
+          <p class="text-sm text-gray-600">RG ou CNH, CPF e o extrato dos últimos 30 dias da sua conta Caixa Tem em PDF.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">03</div>
+          <h3 class="font-bold mb-2">ASSINE PELO APP</h3>
+          <p class="text-sm text-gray-600">Baixa o app do banco e assina o contrato com biometria facial.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">04</div>
+          <h3 class="font-bold mb-2">RECEBA</h3>
+          <p class="text-sm text-gray-600">Dinheiro no Pix em até 48h. Parcelas debitadas no saldo da sua conta Caixa Tem.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Limites -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Limites e Condições</div>
+      <h2 class="text-3xl font-bold mb-8">O que tá disponível</h2>
+      <table class="wf-table mb-6">
+        <tr><th>VALOR</th><td>Até R$ 700</td></tr>
+        <tr><th>PRAZO</th><td>Em até 12 parcelas</td></tr>
+        <tr><th>IDADE</th><td>Sem idade mínima</td></tr>
+        <tr><th>RECEBIMENTO</th><td>No Pix da sua conta</td></tr>
+        <tr><th>PAGAMENTO</th><td>Débito no saldo do Caixa Tem</td></tr>
+      </table>
+      <p class="text-gray-600">O valor e a parcela exatos saem na simulação. Tudo é decidido na hora, pelo WhatsApp.</p>
+    </div>
+  </section>
+
+  <!-- Aviso Anti-Golpe -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="ribbon-warning">
+        <div class="wf-section-label">Aviso Anti-Golpe</div>
+        <h2 class="text-2xl font-bold mb-3">🛡️ Cuidado redobrado: o golpe mais comum mira esse público</h2>
+        <p class="text-gray-700 mb-4">Se alguém te pedir taxa pra "liberar" o empréstimo, dinheiro pra "antecipar" ou senha do Caixa Tem — é golpe. A Siga <strong>nunca</strong> pede pagamento antes da liberação e <strong>nunca</strong> pede sua senha do Caixa Tem. Em qualquer dúvida, fala direto com nosso 0800 591 4204.</p>
+        <span class="wf-btn-outline text-sm" onclick="navigateToPage('contato')">Confirmar pelo canal oficial →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Depoimentos</div>
+      <h2 class="text-3xl font-bold mb-8">Histórias reais de quem foi atendido</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wf-section">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="wf-section-label">FAQ — Bolsa Família</div>
+      <h2 class="text-3xl font-bold mb-8">Tirando as dúvidas mais comuns</h2>
+      <div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Vai descontar do meu Bolsa Família?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. Seu benefício continua chegando integral todo mês. O empréstimo é pago por débito no saldo da sua conta Caixa Tem (que é a conta onde você recebe o benefício, mas o desconto não é no valor do benefício — é no saldo disponível).</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Preciso ter conta no Caixa Tem?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Sim. Esse empréstimo é específico pra quem recebe o Bolsa Família por essa conta.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Vou precisar passar minha senha do Caixa Tem?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. Nunca. Se alguém te pedir, é golpe.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Qual o valor máximo?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Até R$ 700, em até 12 parcelas.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quanto tempo demora pra cair?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Até 48h após você assinar o contrato pelo app do banco.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Posso pegar mesmo se tô negativada?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Pode. A análise é mais flexível, mas passa por consulta SPC.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">E se eu sair do Bolsa Família antes de quitar?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Você continua devendo. As parcelas vão sendo cobradas conforme o contrato — independente do benefício.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Tem alguma taxa pra contratar com a Siga?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. A gente ganha comissão da financeira. Você não paga nada pra falar com a gente.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quais documentos preciso?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">RG (ou CNH), CPF e extrato dos últimos 30 dias da conta Caixa Tem em PDF.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Como faço pra simular?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Manda mensagem no nosso WhatsApp ou liga no 0800. A simulação é na hora.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="wf-section-label">CTA Final</div>
+      <h2 class="text-3xl font-bold mb-2">Prefere que a gente entre em contato?</h2>
+      <p class="text-gray-600 mb-8">Deixa seu contato e a gente chama no WhatsApp. Sem compromisso, sem precisar de senha, sem letra miúda.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="wf-btn-filled" onclick="navigateToPage('contato')">Quero ser contatado →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disclaimer Regulatório -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-card p-5 bg-gray-50">
+        <div class="wf-section-label mb-2">Informações regulatórias deste produto</div>
+        <p class="text-xs text-gray-600 leading-relaxed">As informações adicionais relativas ao Empréstimo Pessoal com Débito em Conta: prazo de pagamento varia de mínimo 1 a no máximo 12 meses, a taxa de juros praticada no produto de crédito pessoal é de 21% a.m. e o custo efetivo total (CET) será a partir de 23,17% a.m. Ao solicitar uma proposta, serão exibidos a taxa de juros utilizada, a tarifa, o imposto (IOF) e o custo efetivo total (CET).</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: CLT ============== -->
+<main id="page-clt" class="page-content hidden">
+
+  <!-- Hero -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › CLT</div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="wf-section-label">Hero — CLT</div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Empréstimo descontado no salário, com taxa que cabe no bolso</h1>
+          <p class="text-lg text-gray-700 mb-3">De R$ 1.000 a R$ 25.000, em até 48 meses, com a parcela descontada direto na folha. Sem precisar autorizar nada na sua empresa.</p>
+          <p class="text-base text-gray-600 mb-6">Se você é registrado em carteira há pelo menos 6 meses, dá pra contratar agora — pelo WhatsApp, 100% digital, com aprovação em minutos.</p>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <span class="wf-btn-filled" onclick="alert('CTA: WhatsApp CLT')">Simular pelo WhatsApp →</span>
+            <span class="wf-btn-outline" onclick="navigateToPage('contato')">Quero ser contatado</span>
+          </div>
+          <div class="flex flex-col gap-2 text-sm">
+            <span>✓ Taxas a partir de [X]% — pendente</span>
+            <span>✓ Sem precisar avisar a empresa</span>
+            <span>✓ Aprovação em minutos</span>
+          </div>
+        </div>
+        <div class="wf-placeholder h-80">[ imagem real: trabalhador com celular ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparativo -->
+  <section class="wf-section">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="wf-section-label">Comparativo</div>
+      <h2 class="text-3xl font-bold mb-2">Por que pagar mais caro?</h2>
+      <p class="text-gray-600 mb-8">O consignado é mais barato porque a parcela vem direto do salário. Risco menor pro banco, taxa menor pra você.</p>
+      <table class="wf-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>CONSIGNADO CLT</th>
+            <th>CARTÃO CRÉDITO</th>
+            <th>CHEQUE ESPECIAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>Taxa mensal</th><td>A partir de [X]%</td><td>Acima de 14%</td><td>Acima de 13%</td></tr>
+          <tr><th>Prazo</th><td>Até 48x</td><td>Curto</td><td>Curto</td></tr>
+          <tr><th>Aprovação</th><td>Mais alta</td><td>Variável</td><td>Variável</td></tr>
+          <tr><th>Garantia</th><td>Desconto em folha</td><td>Nenhuma</td><td>Nenhuma</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Como Funciona</div>
+      <h2 class="text-3xl font-bold mb-8">Do simulador ao Pix em 4 passos</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">01</div>
+          <h3 class="font-bold mb-2">SIMULE</h3>
+          <p class="text-sm text-gray-600">Manda mensagem no WhatsApp. Calculamos sua margem e a melhor proposta.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">02</div>
+          <h3 class="font-bold mb-2">ENVIE OS DOCUMENTOS</h3>
+          <p class="text-sm text-gray-600">RG ou CNH e biometria facial. Tudo pelo celular.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">03</div>
+          <h3 class="font-bold mb-2">ASSINE PELO APP</h3>
+          <p class="text-sm text-gray-600">Contrato no app do banco parceiro. Sem ir em agência.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">04</div>
+          <h3 class="font-bold mb-2">RECEBA</h3>
+          <p class="text-sm text-gray-600">Pix na sua conta. Parcela vem descontada direto no próximo salário.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Limites e Requisitos -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Limites e Requisitos</div>
+      <h2 class="text-3xl font-bold mb-8">Quem pode contratar e quanto dá pra pegar</h2>
+      <table class="wf-table mb-6">
+        <tr><th>VALOR</th><td>De R$ 1.000 a R$ 25.000</td></tr>
+        <tr><th>PRAZO</th><td>De 12 a 48 parcelas</td></tr>
+        <tr><th>COMPROMETIMENTO</th><td>Até 30% da margem bruta</td></tr>
+        <tr><th>IDADE</th><td>Mulheres: 18 a 61 anos &nbsp;|&nbsp; Homens: 18 a 64 anos</td></tr>
+        <tr><th>TEMPO DE EMPRESA</th><td>Mínimo de 6 meses CLT</td></tr>
+      </table>
+      <p class="text-gray-600">A análise leva em conta seu salário e tempo de empresa. A simulação mostra tudo na hora.</p>
+    </div>
+  </section>
+
+  <!-- Aviso Anti-Golpe -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="ribbon-warning">
+        <div class="wf-section-label">Aviso Anti-Golpe</div>
+        <h2 class="text-2xl font-bold mb-3">🛡️ A Siga não cobra nada antes da liberação</h2>
+        <p class="text-gray-700">Qualquer pedido de "taxa de cadastro", "depósito antecipado" ou pagamento antes do dinheiro cair é golpe. Confira sempre se você está nos canais oficiais: 0800 591 4204 ou WhatsApp do site.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Depoimentos</div>
+      <h2 class="text-3xl font-bold mb-8">Trabalhadores que já usaram</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wf-section">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="wf-section-label">FAQ — CLT</div>
+      <h2 class="text-3xl font-bold mb-8">Perguntas que todo CLT faz</h2>
+      <div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Minha empresa precisa autorizar?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. O contrato é direto entre você e a financeira. A empresa só recebe a ordem de desconto em folha quando o crédito é aprovado.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">E se eu for demitido antes de quitar?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">A dívida continua no seu nome. As parcelas passam a ser cobradas via boleto ou débito automático.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Posso quitar antes do prazo?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Pode. Quitação antecipada tem desconto nos juros do período não decorrido.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Preciso de mínimo de tempo na empresa?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Sim, 6 meses de carteira assinada na atual.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Vai consultar SPC ou Serasa?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Vai. Mas o consignado tem aprovação mais flexível porque a parcela é descontada na folha.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Qual a taxa?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Varia conforme seu perfil e a financeira parceira. Na simulação você já vê o número exato — sem letra miúda.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quanto posso comprometer do salário?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Até 30% da margem bruta. A simulação calcula isso pra você.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Preciso ir em agência?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. Tudo é digital, do simulador à assinatura.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Tem taxa pra contratar com a Siga?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. A Siga ganha comissão da financeira. Você não paga nada pra falar com a gente.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quanto tempo pra cair na conta?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Após assinar o contrato no app, o Pix é liberado em poucas horas.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="wf-section-label">CTA Final</div>
+      <h2 class="text-3xl font-bold mb-2">Simula em 2 minutos</h2>
+      <p class="text-gray-600 mb-8">Deixa seu contato que a gente faz a simulação completa e te chama. Sem compromisso.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="wf-btn-filled" onclick="navigateToPage('contato')">Quero ser contatado →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disclaimer Regulatório -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-card p-5 bg-gray-50">
+        <div class="wf-section-label mb-2">Informações regulatórias deste produto</div>
+        <p class="text-xs text-gray-600 leading-relaxed">As informações adicionais relativas ao Empréstimo Pessoal CLT (crédito do trabalhador): prazo de pagamento varia de 8 a 48 meses, a taxa de juros praticada no produto de crédito pessoal é a partir de 1,50% a.m. e o custo efetivo total (CET) será a partir de 1,50% a.m. Ao solicitar uma proposta, serão exibidos a taxa de juros utilizada, a tarifa, o imposto (IOF) e o custo efetivo total (CET).</p>
+        <p class="text-xs text-red-600 mt-3"><strong>⚠️ [REVISAR COM CLIENTE]</strong> O CET informado (1,50% a.m.) está igual à taxa de juros, o que não é possível matematicamente — o CET sempre é maior que a taxa nominal, pois inclui IOF, tarifas e outros encargos. Provável erro de digitação. Confirmar o valor correto antes da publicação.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: FGTS ============== -->
+<main id="page-fgts" class="page-content hidden">
+
+  <!-- Hero -->
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › FGTS</div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="wf-section-label">Hero — FGTS</div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Antecipe seu FGTS em até 10 anos. Dinheiro no Pix em até 1h30.</h1>
+          <p class="text-lg text-gray-700 mb-3">De R$ 100 a R$ 29.000, com parcelas anuais descontadas só do seu próprio FGTS. Você não compromete nada do salário.</p>
+          <p class="text-base text-gray-600 mb-6">Se você aderiu ao Saque-Aniversário, pode antecipar até 10 anos do seu fundo agora. A gente intermedia direto com o banco autorizador QISTA. Tudo digital, com biometria facial.</p>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <span class="wf-btn-filled" onclick="alert('CTA: WhatsApp FGTS')">Simular pelo WhatsApp →</span>
+            <span class="wf-btn-outline" onclick="navigateToPage('contato')">Quero ser contatado</span>
+          </div>
+          <div class="flex flex-col gap-2 text-sm">
+            <span>✓ Pix em até 1h30</span>
+            <span>✓ Sem afetar seu salário</span>
+            <span>✓ Banco autorizador: QISTA S.A.</span>
+          </div>
+        </div>
+        <div class="wf-placeholder h-80">[ imagem real: pessoa com celular + carteira de trabalho digital ]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quem pode contratar -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Quem Pode Contratar</div>
+      <h2 class="text-3xl font-bold mb-6">Esse empréstimo é pra você se...</h2>
+      <div class="space-y-3 mb-6">
+        <div class="wf-card p-4 flex items-start gap-3">
+          <span class="text-xl">✓</span>
+          <span>Você tem saldo disponível no FGTS</span>
+        </div>
+        <div class="wf-card p-4 flex items-start gap-3">
+          <span class="text-xl">✓</span>
+          <span>Aderiu ao Saque-Aniversário (ou pode aderir antes de contratar)</span>
+        </div>
+        <div class="wf-card p-4 flex items-start gap-3">
+          <span class="text-xl">✓</span>
+          <span>Tem entre 18 e 75 anos</span>
+        </div>
+        <div class="wf-card p-4 flex items-start gap-3">
+          <span class="text-xl">✓</span>
+          <span>Tá registrado em carteira há pelo menos 6 meses</span>
+        </div>
+      </div>
+      <p class="text-gray-600">Não aderiu ao Saque-Aniversário ainda? A gente te explica como migrar pelo app do FGTS, é rápido.</p>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Como Funciona</div>
+      <h2 class="text-3xl font-bold mb-8">Em 4 passos o FGTS vira dinheiro no Pix</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">01</div>
+          <h3 class="font-bold mb-2">SIMULE</h3>
+          <p class="text-sm text-gray-600">Manda mensagem no WhatsApp. Calculamos seu valor.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">02</div>
+          <h3 class="font-bold mb-2">AUTORIZE</h3>
+          <p class="text-sm text-gray-600">Pelo app FGTS ou Carteira Digital, você libera a antecipação.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">03</div>
+          <h3 class="font-bold mb-2">ASSINE COM BIOMETRIA</h3>
+          <p class="text-sm text-gray-600">Contrato CCB digital + selfie de prova de vida.</p>
+        </div>
+        <div>
+          <div class="text-4xl font-bold text-gray-300 mb-3">04</div>
+          <h3 class="font-bold mb-2">RECEBA</h3>
+          <p class="text-sm text-gray-600">Pix em até 1h30 na sua conta bancária.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Educação Saque-Aniversário -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Educação Financeira</div>
+      <h2 class="text-3xl font-bold mb-4">Não conhece o Saque-Aniversário? A gente explica</h2>
+      <p class="text-gray-700 mb-6">É uma modalidade do FGTS em que você pode sacar uma parte do seu fundo todo ano, no mês do seu aniversário. Quem aderiu pode também antecipar essas parcelas — é exatamente esse empréstimo que a gente intermedia. <strong>Atenção:</strong> se você aderir ao Saque-Aniversário, abre mão de sacar o valor total do FGTS em caso de demissão sem justa causa (você fica só com a multa de 40%).</p>
+      <span class="wf-btn-outline" onclick="navigateToPage('contato')">Quero entender melhor →</span>
+    </div>
+  </section>
+
+  <!-- Limites -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Limites e Condições</div>
+      <h2 class="text-3xl font-bold mb-8">O que tá disponível</h2>
+      <table class="wf-table">
+        <tr><th>VALOR</th><td>De R$ 100 a R$ 29.000</td></tr>
+        <tr><th>PRAZO</th><td>Até 10 anos (parcelas anuais)</td></tr>
+        <tr><th>IDADE</th><td>De 18 a 75 anos</td></tr>
+        <tr><th>LIBERAÇÃO</th><td>Pix em até 1h30</td></tr>
+        <tr><th>BANCO AUTORIZADOR</th><td>QISTA S.A.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- Aviso Anti-Golpe -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="ribbon-warning">
+        <div class="wf-section-label">Aviso Anti-Golpe</div>
+        <h2 class="text-2xl font-bold mb-3">🛡️ Sem taxa de adesão, sem pagamento antecipado</h2>
+        <p class="text-gray-700">A Siga e a QISTA nunca pedem dinheiro antes de liberar o crédito. Se receber esse tipo de pedido em nome da Siga, é golpe — bloqueia e fala direto com nosso 0800.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Depoimentos</div>
+      <h2 class="text-3xl font-bold mb-8">Quem já antecipou conta</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="wf-placeholder h-32 mb-4">[ foto real OU print ]</div>
+          <p class="text-sm italic text-gray-700 mb-3">"[ Placeholder de depoimento real ]"</p>
+          <p class="text-sm font-semibold">[ Nome ]</p>
+          <p class="text-xs text-gray-500">[ Profissão • Cidade ]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wf-section bg-white">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="wf-section-label">FAQ — FGTS</div>
+      <h2 class="text-3xl font-bold mb-8">Perguntas frequentes sobre FGTS</h2>
+      <div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Vou perder o saque-rescisão se for demitido?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Quem adere ao Saque-Aniversário recebe só a multa de 40% em caso de demissão sem justa causa, não o saldo total. Esse é o trade-off da modalidade — pesa o que faz mais sentido pra você hoje.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Como sei se posso antecipar?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">A gente confere seu saldo no FGTS e te diz na hora. Manda mensagem no WhatsApp.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quanto tempo demora pra cair?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Pix em até 1h30 após você assinar a CCB.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">As parcelas são anuais?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Sim. O desconto acontece uma vez por ano, no mês do seu aniversário, direto do seu FGTS.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">E se eu não trabalhar mais com carteira assinada?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">A antecipação é feita com base no saldo atual do seu FGTS. Você pode parar de receber novos depósitos, mas as parcelas anuais continuam sendo descontadas do saldo até quitar.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quem é a QISTA?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">É o banco autorizador que faz a operação. A Siga é a correspondente que intermedia — você assina o contrato direto com o QISTA.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Qual a taxa?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Varia conforme prazo e valor. Na simulação aparece o número exato.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Tem custo pra contratar com a Siga?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Não. A Siga ganha comissão do banco autorizador. Você não paga nada.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Quais documentos preciso?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">RG ou CNH + biometria facial pelo app. Só isso.</div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Posso ter outros empréstimos junto?<span class="accordion-icon">+</span></div>
+          <div class="accordion-content">Sim. O empréstimo FGTS é independente do consignado, conta de luz e outros.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="wf-section-label">CTA Final</div>
+      <h2 class="text-3xl font-bold mb-2">Antecipe seu FGTS agora</h2>
+      <p class="text-gray-600 mb-8">Deixa seu contato que a gente confere seu saldo e te chama com a simulação completa. Pix em até 1h30 depois da assinatura.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="wf-btn-filled" onclick="navigateToPage('contato')">Quero ser contatado →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disclaimer Regulatório -->
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-card p-5 bg-gray-50">
+        <div class="wf-section-label mb-2">Informações regulatórias deste produto</div>
+        <p class="text-xs text-gray-600 leading-relaxed">As informações adicionais relativas ao Empréstimo com FGTS – Saque Aniversário: prazo de pagamento varia de no mínimo 1 a no máximo 10 anos, a taxa de juros praticada no produto de crédito pessoal é de 1,80% a.m. e CET de 2,37% a.m. Ao solicitar uma proposta, serão exibidos a taxa de juros utilizada, a tarifa, o imposto (IOF) e o custo efetivo total (CET).</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: BLOG ============== -->
+<main id="page-blog" class="page-content hidden">
+
+  <!-- Faixa de conversão no topo do Blog -->
+  <section class="bg-white border-b border-gray-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="text-sm text-gray-700">
+        <strong>Precisa de crédito agora?</strong> Fale com nossa equipe pelo 0800 ou pelo formulário.
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="text-sm text-gray-600 whitespace-nowrap">📞 0800 591 4204</span>
+        <span class="wf-btn-filled text-sm whitespace-nowrap" onclick="navigateToPage('contato')">Quero ser contatado →</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › Blog</div>
+      <div class="wf-section-label">Header do Blog</div>
+      <h1 class="text-4xl font-bold mb-2">Blog da Siga Crédito</h1>
+      <p class="text-lg text-gray-600 mb-8">Conteúdo direto sobre crédito, dívidas e como fazer escolha que cabe no seu bolso.</p>
+      <div class="wf-placeholder h-12 mb-6">[ Barra de busca ]</div>
+      <div class="flex flex-wrap gap-2 mb-2">
+        <span class="cta-bar cursor-pointer">Todos</span>
+        <span class="cta-bar cursor-pointer">Conta de Luz</span>
+        <span class="cta-bar cursor-pointer">Bolsa Família</span>
+        <span class="cta-bar cursor-pointer">CLT / Consignado</span>
+        <span class="cta-bar cursor-pointer">FGTS</span>
+        <span class="cta-bar cursor-pointer">Educação Financeira</span>
+        <span class="cta-bar cursor-pointer">Notícias do setor</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Post em Destaque</div>
+      <div class="wf-card overflow-hidden cursor-pointer mb-12">
+        <div class="grid md:grid-cols-2">
+          <div class="wf-placeholder h-64 md:h-80">[ imagem destaque grande ]</div>
+          <div class="p-8">
+            <span class="text-xs text-gray-500">EDUCAÇÃO FINANCEIRA • DESTAQUE</span>
+            <h2 class="text-2xl font-bold mt-2 mb-4">[ Título do post em destaque ]</h2>
+            <p class="text-gray-600 mb-4">[ Resumo de 2-3 linhas do conteúdo do post... ]</p>
+            <p class="text-xs text-gray-500 mb-4">Publicado em [data] • [tempo de leitura] min</p>
+            <span class="wf-btn-outline text-sm">Ler artigo →</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-section-label">Posts Recentes</div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-card overflow-hidden cursor-pointer">
+          <div class="wf-placeholder h-40">[ imagem ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">CONTA DE LUZ • 4 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post ]</h3>
+            <p class="text-sm text-gray-600 mb-3">[ Resumo curto... ]</p>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+        <div class="wf-card overflow-hidden cursor-pointer">
+          <div class="wf-placeholder h-40">[ imagem ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">BOLSA FAMÍLIA • 5 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post ]</h3>
+            <p class="text-sm text-gray-600 mb-3">[ Resumo curto... ]</p>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+        <div class="wf-card overflow-hidden cursor-pointer">
+          <div class="wf-placeholder h-40">[ imagem ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">CLT • 6 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post ]</h3>
+            <p class="text-sm text-gray-600 mb-3">[ Resumo curto... ]</p>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+        <div class="wf-card overflow-hidden cursor-pointer">
+          <div class="wf-placeholder h-40">[ imagem ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">FGTS • 7 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post ]</h3>
+            <p class="text-sm text-gray-600 mb-3">[ Resumo curto... ]</p>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+        <div class="wf-card overflow-hidden cursor-pointer">
+          <div class="wf-placeholder h-40">[ imagem ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">EDUCAÇÃO FINANCEIRA • 5 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post ]</h3>
+            <p class="text-sm text-gray-600 mb-3">[ Resumo curto... ]</p>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+        <div class="wf-card overflow-hidden cursor-pointer">
+          <div class="wf-placeholder h-40">[ imagem ]</div>
+          <div class="p-4">
+            <span class="text-xs text-gray-500">NOTÍCIAS • 3 min</span>
+            <h3 class="font-bold mt-2 mb-2">[ Título do post ]</h3>
+            <p class="text-sm text-gray-600 mb-3">[ Resumo curto... ]</p>
+            <span class="text-sm text-gray-700 underline">Ler artigo →</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-8">
+        <span class="wf-btn-outline" onclick="alert('Paginação')">Carregar mais →</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="wf-section-label">Observação</div>
+      <p class="text-sm text-gray-600">📌 Blog alimentado pelo Automarticles (ferramenta de SEO automatizado). Estrutura otimizada com schema markup, breadcrumb, autor, data, tempo de leitura e CTA recorrente nos posts individuais.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: SOBRE ============== -->
+<main id="page-sobre" class="page-content hidden">
+
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › Sobre</div>
+      <div class="wf-section-label">Hero — Sobre</div>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">A gente trabalha pra quem o sistema deixou de fora.</h1>
+      <p class="text-xl text-gray-700">Desde 2020 ajudando trabalhador, beneficiário e quem tá apertado a conseguir crédito de forma honesta, digital e sem golpe.</p>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Nossa História</div>
+      <h2 class="text-3xl font-bold mb-6">Por que a Siga existe</h2>
+      <p class="text-gray-700 leading-relaxed">A Siga Crédito nasceu em Londrina (PR) em 2020, com um propósito simples: dar acesso a crédito pra quem o sistema bancário ignora. Hoje somos correspondente de cinco financeiras autorizadas pelo Banco Central, intermediamos quatro produtos diferentes e atendemos mais de mil pessoas por dia, em todo o Brasil. Tudo digital. Tudo na velocidade que o aperto exige.</p>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Números</div>
+      <h2 class="text-3xl font-bold mb-8">O que a gente entregou até hoje</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="wf-card p-6 text-center"><div class="stat-number" data-counter data-target="150" data-prefix="R$ " data-suffix="mi+">R$ 0mi+</div><div class="stat-label">em empréstimos intermediados</div></div>
+        <div class="wf-card p-6 text-center"><div class="stat-number">2020</div><div class="stat-label">fundada em</div></div>
+        <div class="wf-card p-6 text-center"><div class="stat-number" data-counter data-target="1000" data-suffix="">0</div><div class="stat-label">atendimentos por dia</div></div>
+        <div class="wf-card p-6 text-center"><div class="stat-number" data-counter data-target="1" data-suffix=" milhão+">0</div><div class="stat-label">pedidos analisados</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Por Dentro da Siga</div>
+      <h2 class="text-3xl font-bold mb-2">Quem tá do outro lado</h2>
+      <p class="text-gray-600 mb-8">Atendimento digital, mas com gente real. Conheça o time que atende você todo dia em Londrina.</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="wf-placeholder h-64">[ Foto real: equipe no escritório ]</div>
+        <div class="wf-placeholder h-64">[ Foto real: atendente em ação ]</div>
+        <div class="wf-placeholder h-64">[ Foto real: ambiente do escritório ]</div>
+      </div>
+      <p class="text-xs text-gray-500 mt-4 text-center italic">📌 Fotos a serem providenciadas pelo cliente. Sugestão: fotografar 6-9 imagens em uma sessão única (equipe trabalhando, ambiente, detalhes do escritório, sem stock photo).</p>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <div class="wf-section-label">Bancos Parceiros</div>
+      <h2 class="text-2xl font-bold mb-2">Trabalhamos com financeiras autorizadas pelo Banco Central</h2>
+      <p class="text-gray-600 mb-8 max-w-2xl mx-auto">Como correspondente bancário, nosso papel é intermediar entre você e essas instituições. Você assina o contrato direto com elas, com toda a segurança que o sistema financeiro exige.</p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="wf-placeholder h-16">[ logo Crefaz ]</div>
+        <div class="wf-placeholder h-16">[ logo Crefisa ]</div>
+        <div class="wf-placeholder h-16">[ logo Novo SAC ]</div>
+        <div class="wf-placeholder h-16">[ logo Presença Bank ]</div>
+        <div class="wf-placeholder h-16">[ logo V8 ]</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="wf-section-label">Regulamentação</div>
+      <h2 class="text-3xl font-bold mb-8">Tudo registrado, tudo regulamentado</h2>
+      <table class="wf-table">
+        <tr><th>Razão Social</th><td>Siga Serviços Empresariais Ltda</td></tr>
+        <tr><th>CNPJ</th><td>37.642.817/0001-73</td></tr>
+        <tr><th>Endereço</th><td>Rua Pernambuco, 269, Sala 1401-A, Londrina – Paraná</td></tr>
+        <tr><th>Operação</th><td>Correspondente bancário conforme Resolução CMN 4.935 do Banco Central</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Compromissos</div>
+      <h2 class="text-3xl font-bold mb-8">Como a gente trabalha</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">🛡️</div>
+          <h3 class="font-bold mb-2">ANTI-GOLPE</h3>
+          <p class="text-sm text-gray-600">A Siga nunca pede pagamento antecipado. Se alguém em nosso nome pedir dinheiro pra "liberar" empréstimo, é golpe — denuncia.</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">🎯</div>
+          <h3 class="font-bold mb-2">TRANSPARÊNCIA</h3>
+          <p class="text-sm text-gray-600">Você sabe a taxa, o valor da parcela e o total a pagar antes de assinar. Sem letra miúda.</p>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">💬</div>
+          <h3 class="font-bold mb-2">ATENDIMENTO HUMANO</h3>
+          <p class="text-sm text-gray-600">Tem gente real do outro lado em todos os canais. WhatsApp, 0800 ou e-mail — você fala com quem entende do produto e do seu caso.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="wf-section-label">CTA Sobre</div>
+      <h2 class="text-3xl font-bold mb-8">Bora ver qual produto serve pro seu caso?</h2>
+      <span class="wf-btn-filled" onclick="navigateToPage('home')">Ver produtos disponíveis →</span>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: CONTATO ============== -->
+<main id="page-contato" class="page-content hidden">
+
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › Contato</div>
+      <div class="wf-section-label">Hero — Contato</div>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">A gente tá perto.</h1>
+      <p class="text-xl text-gray-700">Escolhe o canal mais cômodo. A gente responde rápido em todos.</p>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Canais Oficiais</div>
+      <h2 class="text-3xl font-bold mb-8">Canais oficiais</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">📱</div>
+          <h3 class="font-bold mb-2">WhatsApp Conta de Luz</h3>
+          <p class="text-sm text-gray-600 mb-4">Atendimento 24h</p>
+          <span class="wf-btn-filled text-sm" onclick="alert('CTA: WhatsApp')">Falar agora</span>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">📱</div>
+          <h3 class="font-bold mb-2">WhatsApp Bolsa Família</h3>
+          <p class="text-sm text-gray-600 mb-4">Atendimento 24h</p>
+          <span class="wf-btn-filled text-sm" onclick="alert('CTA: WhatsApp')">Falar agora</span>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">📱</div>
+          <h3 class="font-bold mb-2">WhatsApp CLT</h3>
+          <p class="text-sm text-gray-600 mb-4">Atendimento 24h</p>
+          <span class="wf-btn-filled text-sm" onclick="alert('CTA: WhatsApp')">Falar agora</span>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">📱</div>
+          <h3 class="font-bold mb-2">WhatsApp FGTS</h3>
+          <p class="text-sm text-gray-600 mb-4">Atendimento 24h</p>
+          <span class="wf-btn-filled text-sm" onclick="alert('CTA: WhatsApp')">Falar agora</span>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">📞</div>
+          <h3 class="font-bold mb-2">0800 591 4204</h3>
+          <p class="text-sm text-gray-600 mb-4">Ligação gratuita</p>
+          <span class="wf-btn-outline text-sm" onclick="alert('CTA: ligar')">Ligar</span>
+        </div>
+        <div class="wf-card p-6">
+          <div class="text-2xl mb-3">✉️</div>
+          <h3 class="font-bold mb-2">E-mail</h3>
+          <p class="text-sm text-gray-600 mb-4">contato@sigacredito.com.br</p>
+          <span class="wf-btn-outline text-sm" onclick="alert('CTA: email')">Enviar e-mail</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-2xl mx-auto px-4">
+      <div class="wf-section-label">Formulário</div>
+      <h2 class="text-3xl font-bold mb-2">Prefere ser contatado?</h2>
+      <p class="text-gray-600 mb-8">Preenche aí que a gente te liga.</p>
+      <form class="space-y-4" onsubmit="event.preventDefault(); alert('Formulário enviado (placeholder)');">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Nome completo</label>
+          <input type="text" class="w-full p-3 border border-gray-300 rounded-md" placeholder="Seu nome">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">WhatsApp</label>
+          <input type="tel" class="w-full p-3 border border-gray-300 rounded-md" placeholder="(00) 00000-0000">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">E-mail</label>
+          <input type="email" class="w-full p-3 border border-gray-300 rounded-md" placeholder="seu@email.com">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Qual produto te interessa?</label>
+          <select class="w-full p-3 border border-gray-300 rounded-md">
+            <option>Selecione...</option>
+            <option>Conta de Luz</option>
+            <option>Bolsa Família</option>
+            <option>CLT (Consignado)</option>
+            <option>FGTS</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Mensagem (opcional)</label>
+          <textarea class="w-full p-3 border border-gray-300 rounded-md" rows="3" placeholder="Conta um pouco do seu caso..."></textarea>
+        </div>
+        <div class="flex items-start gap-2">
+          <input type="checkbox" class="mt-1">
+          <label class="text-sm text-gray-600">Concordo com a política de privacidade e autorizo o contato (LGPD)</label>
+        </div>
+        <button type="submit" class="wf-btn-filled w-full justify-center">Quero ser contatado →</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="wf-section-label">Endereço</div>
+      <h2 class="text-3xl font-bold mb-2">Onde a gente fica</h2>
+      <p class="text-gray-600 mb-8">Atendimento 100% digital. Mas o escritório existe — e é em Londrina.</p>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <table class="wf-table">
+            <tr><th>Razão Social</th><td>Siga Serviços Empresariais Ltda</td></tr>
+            <tr><th>Endereço</th><td>Rua Pernambuco, 269, Sala 1401-A</td></tr>
+            <tr><th>Cidade</th><td>Londrina – Paraná</td></tr>
+            <tr><th>CNPJ</th><td>37.642.817/0001-73</td></tr>
+          </table>
+        </div>
+        <div class="wf-placeholder h-64">[ Mapa do Google embarcado ]</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wf-section bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="wf-section-label">Redes Sociais</div>
+      <h2 class="text-3xl font-bold mb-8">Acompanhe a gente nas redes</h2>
+      <div class="flex flex-wrap justify-center gap-4">
+        <span class="wf-btn-outline" onclick="alert('Instagram')">📷 Instagram</span>
+        <span class="wf-btn-outline" onclick="alert('Facebook')">f Facebook</span>
+        <span class="wf-btn-outline" onclick="alert('YouTube')">▶ YouTube</span>
+        <span class="wf-btn-outline" onclick="alert('TikTok')">♪ TikTok</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: POLÍTICA DE PRIVACIDADE ============== -->
+<main id="page-privacidade" class="page-content hidden">
+  <section class="wf-section bg-white">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › Política de Privacidade</div>
+      <div class="wf-section-label">Hero — Página Legal</div>
+      <h1 class="text-4xl font-bold mb-2">Política de Privacidade</h1>
+      <p class="text-sm text-gray-500">Última atualização: [DATA]</p>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="wf-card p-5 bg-yellow-50 mb-8 border-l-4 border-yellow-400">
+        <p class="text-sm text-gray-700"><strong>📋 Placeholder estrutural.</strong> Esta página precisa ser redigida por um advogado especializado em LGPD antes de ir ao ar. A estrutura abaixo lista os blocos obrigatórios pra cobrir a operação da Siga Crédito como correspondente bancário. O texto-base é apenas referência do que cada bloco deve abordar.</p>
+      </div>
+
+      <div class="space-y-8">
+        <div>
+          <h2 class="text-xl font-bold mb-2">1. Quem somos</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Identificação do controlador: razão social, CNPJ, endereço, contato do encarregado de dados (DPO). Linguagem juridicamente precisa.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">2. Dados que coletamos</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Lista detalhada: dados pessoais coletados via formulário, WhatsApp, telefone, cookies, e dados sensíveis (renda, benefício social) usados na intermediação de crédito.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">3. Finalidades do tratamento</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Para que cada dado é usado: contato inicial, simulação de crédito, encaminhamento para financeiras parceiras, cumprimento de obrigações legais, marketing (com consentimento separado).</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">4. Base legal</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Bases da LGPD aplicáveis (Art. 7º e 11): consentimento, execução de contrato, cumprimento de obrigação legal/regulatória (Banco Central), legítimo interesse, proteção de crédito.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">5. Compartilhamento com terceiros</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Lista nominal: Crefaz, Crefisa, Novo SAC, Presença Bank, V8 (financeiras parceiras), bureaus de crédito (SPC, Serasa), autoridades regulatórias (Bacen, Receita Federal), processadores de pagamento. Justificativa para cada compartilhamento.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">6. Retenção e descarte</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Prazos de retenção por tipo de dado e finalidade. Procedimento de descarte. Obrigação legal de manter histórico de operações financeiras (5+ anos).</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">7. Direitos do titular</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Lista dos direitos da LGPD Art. 18: confirmação, acesso, correção, anonimização, portabilidade, eliminação, informação sobre compartilhamento, revogação. Canal de atendimento ao titular e prazo de resposta.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">8. Segurança</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Medidas técnicas e administrativas de proteção: criptografia, controle de acesso, treinamento, plano de resposta a incidentes.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">9. Cookies</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Tipos de cookies usados (essenciais, analytics, marketing). Como gerenciar consentimento. Link para banner de cookies.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">10. Contato do encarregado (DPO)</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Nome, e-mail e procedimento para exercer direitos do titular ou reportar incidente. Prazo legal de resposta (15 dias).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: TERMOS DE USO ============== -->
+<main id="page-termos" class="page-content hidden">
+  <section class="wf-section bg-white">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › Termos de Uso</div>
+      <div class="wf-section-label">Hero — Página Legal</div>
+      <h1 class="text-4xl font-bold mb-2">Termos de Uso</h1>
+      <p class="text-sm text-gray-500">Última atualização: [DATA]</p>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="wf-card p-5 bg-yellow-50 mb-8 border-l-4 border-yellow-400">
+        <p class="text-sm text-gray-700"><strong>📋 Placeholder estrutural.</strong> Esta página precisa ser redigida por advogado antes de ir ao ar. A estrutura abaixo lista os blocos obrigatórios pra cobrir a operação da Siga Crédito.</p>
+      </div>
+
+      <div class="space-y-8">
+        <div>
+          <h2 class="text-xl font-bold mb-2">1. Aceitação dos termos</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Definição clara de que o uso do site implica aceitação dos termos. Idade mínima (18 anos). Procedimento para alterações nos termos.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">2. Sobre a Siga Crédito</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Identificação como correspondente bancário (Resolução CMN 4.935). A Siga NÃO é instituição financeira. Não concede crédito diretamente — intermedia operações entre o cliente e financeiras parceiras.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">3. Serviços oferecidos</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Descrição dos 4 produtos intermediados. Quais financeiras são responsáveis por cada um. Disclaimer de que a aprovação e condições finais são da financeira, não da Siga.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">4. Cadastro e uso da plataforma</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Veracidade das informações fornecidas. Responsabilidade do usuário pela atualização dos dados. Vedação a cadastros em nome de terceiros.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">5. Custos e cobranças</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">A Siga NÃO cobra do cliente pela intermediação. Receita vem de comissão paga pela financeira. Reforço do compromisso anti-golpe: nunca pedimos pagamento antecipado.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">6. Responsabilidades e limitações</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Limitação de responsabilidade da Siga. Riscos do crédito assumidos pelo cliente e pela financeira contratante. Exclusão de garantias quanto a aprovação, taxas e condições finais.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">7. Propriedade intelectual</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Direitos autorais sobre o site, marca, conteúdo e materiais. Vedação a uso não autorizado.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">8. Conduta proibida</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Lista de condutas proibidas: fraude, uso de dados falsos, scraping, tentativa de invasão, uso indevido da marca, etc.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">9. Foro e legislação aplicável</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Foro de Londrina/PR para resolução de disputas. Legislação brasileira aplicável.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">10. Contato</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Canais oficiais para questões relativas aos termos: e-mail jurídico, endereço, telefone.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PÁGINA: LGPD ============== -->
+<main id="page-lgpd" class="page-content hidden">
+  <section class="wf-section bg-white">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="breadcrumb"><span onclick="navigateToPage('home')">Home</span> › LGPD</div>
+      <div class="wf-section-label">Hero — Página Legal</div>
+      <h1 class="text-4xl font-bold mb-2">LGPD — Portal do Titular</h1>
+      <p class="text-lg text-gray-700">Seus direitos sobre os seus dados pessoais e como exercê-los.</p>
+    </div>
+  </section>
+
+  <section class="wf-section">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="wf-card p-5 bg-yellow-50 mb-8 border-l-4 border-yellow-400">
+        <p class="text-sm text-gray-700"><strong>📋 Placeholder estrutural.</strong> Esta página precisa ser redigida por um advogado e configurada com sistema funcional de requisições do titular antes de ir ao ar. A estrutura abaixo lista os blocos obrigatórios.</p>
+      </div>
+
+      <div class="space-y-8">
+        <div>
+          <h2 class="text-xl font-bold mb-2">1. O que é a LGPD</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Explicação acessível da Lei Geral de Proteção de Dados (Lei 13.709/2018). Por que ela existe e o que protege.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">2. Seus direitos como titular</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Lista dos 9 direitos do Art. 18 explicados em linguagem simples: saber se temos seus dados, acessar, corrigir, eliminar, etc.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">3. Como exercer seus direitos</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Formulário ou e-mail dedicado pra requisição. Documentos necessários pra confirmar identidade. Prazo de resposta (15 dias).</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">4. Encarregado (DPO)</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Identificação do encarregado pelo tratamento de dados (DPO). Nome, e-mail e canal de contato.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">5. Quando você precisa entrar em contato</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Lista de situações: solicitar acesso, corrigir dado errado, revogar consentimento, reportar suspeita de vazamento, denunciar uso indevido.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">6. Formulário de requisição</h2>
+          <div class="wf-placeholder min-h-[120px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Formulário funcional: nome, CPF, e-mail, tipo de requisição (dropdown), descrição, anexar documento de identificação. Confirmação por e-mail.</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-2">7. ANPD — Autoridade Nacional</h2>
+          <div class="wf-placeholder min-h-[80px] p-4 text-left items-start justify-start">
+            <span class="text-sm text-gray-600">Caso o titular não fique satisfeito com a resposta da Siga, pode acionar a ANPD. Link para o canal oficial da autoridade.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== FOOTER GLOBAL ============== -->
+<footer class="bg-white border-t border-gray-200 py-12 mt-12">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <span class="font-bold text-lg block mb-3">[ LOGO Siga Crédito ]</span>
+        <p class="text-sm text-gray-600">A gente é correspondente bancário, no ar desde 2020, intermediando crédito pra quem o sistema bancário ignora. Tudo digital, sem golpe, sem letra miúda.</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-wide">Produtos</h4>
+        <ul class="text-sm text-gray-600 space-y-2">
+          <li><span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('conta-luz')">Conta de Luz</span></li>
+          <li><span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('bolsa-familia')">Bolsa Família</span></li>
+          <li><span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('clt')">CLT</span></li>
+          <li><span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('fgts')">FGTS</span></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-wide">Institucional</h4>
+        <ul class="text-sm text-gray-600 space-y-2">
+          <li><span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('sobre')">Sobre</span></li>
+          <li><span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('blog')">Blog</span></li>
+          <li><span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('contato')">Contato</span></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-wide">Contato</h4>
+        <ul class="text-sm text-gray-600 space-y-2 mb-4">
+          <li>0800 591 4204</li>
+          <li>contato@sigacredito.com.br</li>
+          <li>Rua Pernambuco, 269<br>Londrina/PR</li>
+        </ul>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-wide">Redes</h4>
+        <div class="flex gap-3">
+          <span class="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100" title="Instagram" onclick="alert('Instagram')">📷</span>
+          <span class="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100" title="Facebook" onclick="alert('Facebook')">f</span>
+          <span class="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100" title="YouTube" onclick="alert('YouTube')">▶</span>
+          <span class="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100" title="TikTok" onclick="alert('TikTok')">♪</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ribbon-warning mb-6">
+      <p class="text-sm"><strong>⚠️ A SIGA NUNCA PEDE PAGAMENTO ADIANTADO.</strong> Se alguém em nosso nome pedir dinheiro pra "liberar" empréstimo, é golpe. Denuncie e bloqueie.</p>
+    </div>
+
+    <div class="wf-card p-5 mb-6 bg-gray-50">
+      <div class="wf-section-label mb-2">Informações regulatórias</div>
+      <p class="text-xs text-gray-600 leading-relaxed">A taxa de juros pode variar de acordo com o tipo, modelo, financeira ou banco que realizarmos a operação de crédito, além do risco apresentado pelo perfil econômico de cada cliente. O CET é calculado considerando os fluxos referentes às liberações e aos pagamentos previstos, incluindo taxa de juros, tributos, tarifas bancárias, seguros e outros serviços autorizados, inclusive quando essas despesas forem financiadas. O Custo Efetivo Total (CET) varia de acordo com a Instituição Financeira. Consulte CET antes de contratar.</p>
+    </div>
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs text-gray-500 pt-6 border-t border-gray-200">
+      <div>
+        <p>CNPJ: 37.642.817/0001-73 • Correspondente bancário conforme Resolução CMN 4.935</p>
+        <p class="mt-1">© 2026 Siga Crédito. Todos os direitos reservados.</p>
+      </div>
+      <div class="flex flex-wrap gap-3 items-center">
+        <span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('privacidade')">Política de Privacidade</span>
+        <span>•</span>
+        <span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('termos')">Termos de Uso</span>
+        <span>•</span>
+        <span class="cursor-pointer hover:text-gray-900" onclick="navigateToPage('lgpd')">LGPD</span>
+        <span>•</span>
+        <span class="cursor-pointer hover:text-gray-900" onclick="alert('Link externo: https://www.reclameaqui.com.br/empresa/siga-credito/')">🏆 Reclame Aqui</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<div class="floating-wpp" onclick="alert('CTA: WhatsApp principal')" title="Falar com nossa equipe">📱</div>
+
+<script>
+  function navigateToPage(pageId) {
+    document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+    const target = document.getElementById('page-' + pageId);
+    if (target) target.classList.remove('hidden');
+
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+    // Marca o item do menu — páginas de produto ativam "Empréstimos"
+    const productPages = ['conta-luz', 'bolsa-familia', 'clt', 'fgts'];
+    if (productPages.includes(pageId)) {
+      const trigger = document.getElementById('dropdown-trigger');
+      if (trigger) trigger.classList.add('active');
+    } else {
+      const activeLink = document.querySelector('.nav-link[data-page="' + pageId + '"]');
+      if (activeLink) activeLink.classList.add('active');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleDropdown(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('dropdown-menu');
+    if (menu) menu.classList.toggle('hidden');
+  }
+
+  function closeDropdown() {
+    const menu = document.getElementById('dropdown-menu');
+    if (menu) menu.classList.add('hidden');
+  }
+
+  // Fecha dropdown ao clicar fora
+  document.addEventListener('click', (e) => {
+    const wrapper = document.getElementById('dropdown-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+      closeDropdown();
+    }
+  });
+
+  function toggleAccordion(header) {
+    header.parentElement.classList.toggle('open');
+  }
+
+  // Counter animado — dispara uma vez ao entrar no viewport
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target, 10);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    const duration = 1500;
+    const start = performance.now();
+
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(target * eased);
+      // Formatar com separador de milhar quando target >= 1000
+      const formatted = target >= 1000 ? value.toLocaleString('pt-BR') : value;
+      el.textContent = prefix + formatted + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // IntersectionObserver para counters
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        animateCounter(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+
+  // Inicializa com home ativa
+  document.addEventListener('DOMContentLoaded', () => {
+    const homeLink = document.querySelector('.nav-link[data-page="home"]');
+    if (homeLink) homeLink.classList.add('active');
+  });
+</script>
+
+</body>
+</html>

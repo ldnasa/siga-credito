@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siga Crédito - Design System v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* Showcase chrome only — não vai pro projeto */
+  .showcase-nav {
+    position: sticky; top: 0; z-index: var(--z-sticky);
+    background: rgba(251,248,243,.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: var(--s-3) 0;
+  }
+  .showcase-nav .container { display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: center; }
+  .showcase-nav a {
+    font: 500 var(--fs-small) var(--font-text);
+    color: var(--text-muted); text-decoration: none;
+    padding: var(--s-2) var(--s-3); border-radius: var(--r-sm);
+  }
+  .showcase-nav a:hover { background: var(--surface-2); color: var(--brand-ink); }
+  .showcase-nav .brand { font: 700 var(--fs-body) var(--font-display); color: var(--brand-red); margin-right: auto; letter-spacing: var(--tr-tight); }
+
+  .section-title { display: flex; align-items: baseline; gap: var(--s-4); margin-bottom: var(--s-8); padding-bottom: var(--s-4); border-bottom: 1px solid var(--border); }
+  .section-title .num { font: 700 var(--fs-h3) var(--font-display); color: var(--brand-red); }
+  .section-title h2 { font-size: var(--fs-h2); }
+  .section-title .hint { margin-left: auto; color: var(--text-subtle); font-size: var(--fs-small); }
+
+  .swatch { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+  .swatch-color { height: 96px; }
+  .swatch-meta { padding: var(--s-3) var(--s-4); }
+  .swatch-name { font: 600 var(--fs-small) var(--font-text); }
+  .swatch-hex { font: 500 var(--fs-caption) var(--font-mono); color: var(--text-muted); margin-top: var(--s-1); }
+  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--s-4); }
+
+  .type-row { padding: var(--s-5) 0; border-bottom: 1px dashed var(--border); }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta { font: 500 var(--fs-caption) var(--font-mono); color: var(--text-subtle); margin-top: var(--s-2); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: var(--s-6); }
+  @media (min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+  .grid-3 { display: grid; grid-template-columns: 1fr; gap: var(--s-6); }
+  @media (min-width: 768px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+  .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-4); }
+  @media (min-width: 768px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
+
+  .demo-box {
+    padding: var(--s-6);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    display: flex; flex-direction: column; gap: var(--s-4); align-items: flex-start;
+  }
+  .demo-label { font: 600 var(--fs-caption) var(--font-text); color: var(--text-subtle); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+
+  .spacing-bar { background: var(--brand-red); height: 16px; border-radius: var(--r-sm); }
+  .spacing-row { display: flex; align-items: center; gap: var(--s-4); padding: var(--s-2) 0; }
+  .spacing-row code { font: 500 var(--fs-caption) var(--font-mono); color: var(--text-muted); min-width: 80px; }
+
+  .shadow-card { background: var(--surface); border-radius: var(--r-md); padding: var(--s-6); text-align: center; }
+  .radius-box { background: var(--brand-cream); padding: var(--s-5); text-align: center; font: 500 var(--fs-small) var(--font-mono); color: var(--brand-ink); }
+
+  .icon-tile { display: flex; flex-direction: column; align-items: center; gap: var(--s-2); padding: var(--s-4); border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); }
+  .icon-tile svg { stroke: var(--brand-ink); }
+  .icon-tile span { font: 500 var(--fs-caption) var(--font-mono); color: var(--text-muted); }
+  .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--s-3); }
+
+  pre.code {
+    background: var(--surface-ink); color: var(--text-on-dark);
+    padding: var(--s-4); border-radius: var(--r-sm);
+    font: 500 var(--fs-caption)/1.6 var(--font-mono);
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  .anti-list { list-style: none; padding: 0; margin: 0; }
+  .anti-list li { padding: var(--s-3) 0; border-bottom: 1px dashed var(--border); display: flex; gap: var(--s-3); align-items: flex-start; }
+  .anti-list li::before { content: "✕"; color: var(--brand-red); font-weight: 700; }
+
+  .hero-showcase {
+    background: var(--surface-ink); color: var(--text-on-dark);
+    border-radius: var(--r-lg); padding: var(--s-16) var(--s-8);
+    margin-block: var(--s-8);
+    position: relative; overflow: hidden;
+  }
+  .hero-showcase::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(-45deg, transparent 0 6px, rgba(192,25,32,0.07) 6px 7px);
+    pointer-events: none;
+  }
+  .hero-showcase > * { position: relative; }
+  .hero-showcase .eyebrow { color: var(--brand-red); font: 700 var(--fs-label) var(--font-text); letter-spacing: var(--tr-wide); text-transform: uppercase; }
+  .hero-showcase h1 { font-size: var(--fs-display); margin-top: var(--s-4); max-width: 18ch; }
+  .hero-showcase p { color: var(--text-on-dark); opacity: .8; font-size: var(--fs-lead); max-width: 56ch; margin-top: var(--s-5); }
+  .hero-showcase .actions { margin-top: var(--s-8); display: flex; gap: var(--s-3); flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<nav class="showcase-nav">
+  <div class="container">
+    <span class="brand">Siga Crédito · DS v1.0</span>
+    <a href="#colors">Cores</a>
+    <a href="#typography">Tipografia</a>
+    <a href="#spacing">Espaçamento</a>
+    <a href="#radius">Raios</a>
+    <a href="#shadows">Sombras</a>
+    <a href="#buttons">Botões</a>
+    <a href="#cards">Cards</a>
+    <a href="#forms">Forms</a>
+    <a href="#badges">Badges</a>
+    <a href="#icons">Ícones</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#anti">Anti-padrões</a>
+  </div>
+</nav>
+
+<header class="container" style="padding-block: var(--s-12);">
+  <div class="hero-showcase">
+    <span class="eyebrow">Design System · Out 2025</span>
+    <h1>Banco de bairro digital. Confiável e perto.</h1>
+    <p>Cada decisão visual abaixo serve a um único objetivo: fazer um brasileiro com pressa e medo de golpe sentir que pode confiar. Sem letra miúda, sem festa de oferta, sem frieza bancária.</p>
+    <div class="actions">
+      <a class="btn btn-primary btn-lg" href="#buttons">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Simular pelo WhatsApp
+      </a>
+      <a class="btn btn-ghost btn-lg" href="#colors" style="color: var(--text-on-dark); border-color: rgba(251,248,243,.3);">
+        Ver tokens
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- =================================================
+     1. COLORS
+================================================= -->
+<section id="colors" class="container section">
+  <div class="section-title">
+    <span class="num">01</span>
+    <h2>Paleta</h2>
+    <span class="hint">vermelho marca, verde CTA, neutros quentes</span>
+  </div>
+
+  <h3 style="margin-bottom: var(--s-4);">Marca</h3>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#C01920"></div><div class="swatch-meta"><div class="swatch-name">brand-red</div><div class="swatch-hex">#C01920</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#8E1218"></div><div class="swatch-meta"><div class="swatch-name">brand-red-deep</div><div class="swatch-hex">#8E1218</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F7E5E6"></div><div class="swatch-meta"><div class="swatch-name">brand-red-soft</div><div class="swatch-hex">#F7E5E6</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1E1E1F"></div><div class="swatch-meta"><div class="swatch-name">brand-ink</div><div class="swatch-hex">#1E1E1F</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ADBBC8"></div><div class="swatch-meta"><div class="swatch-name">brand-stone</div><div class="swatch-hex">#ADBBC8</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F0E4CC"></div><div class="swatch-meta"><div class="swatch-name">brand-cream</div><div class="swatch-hex">#F0E4CC</div></div></div>
+  </div>
+
+  <h3 style="margin: var(--s-10) 0 var(--s-4);">CTA — verde reservado</h3>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#1FAA59"></div><div class="swatch-meta"><div class="swatch-name">cta-green</div><div class="swatch-hex">#1FAA59</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#178A48"></div><div class="swatch-meta"><div class="swatch-name">cta-green-deep</div><div class="swatch-hex">#178A48</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E4F5EC"></div><div class="swatch-meta"><div class="swatch-name">cta-green-soft</div><div class="swatch-hex">#E4F5EC</div></div></div>
+  </div>
+
+  <h3 style="margin: var(--s-10) 0 var(--s-4);">Neutros quentes</h3>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#FBF8F3"></div><div class="swatch-meta"><div class="swatch-name">bg</div><div class="swatch-hex">#FBF8F3</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#FFFFFF; border-bottom:1px solid var(--border)"></div><div class="swatch-meta"><div class="swatch-name">surface</div><div class="swatch-hex">#FFFFFF</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F4EEDF"></div><div class="swatch-meta"><div class="swatch-name">surface-2</div><div class="swatch-hex">#F4EEDF</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#14110E"></div><div class="swatch-meta"><div class="swatch-name">surface-ink</div><div class="swatch-hex">#14110E</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E6DFCF"></div><div class="swatch-meta"><div class="swatch-name">border</div><div class="swatch-hex">#E6DFCF</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C9BFA8"></div><div class="swatch-meta"><div class="swatch-name">border-strong</div><div class="swatch-hex">#C9BFA8</div></div></div>
+  </div>
+
+  <h3 style="margin: var(--s-10) 0 var(--s-4);">Semânticos</h3>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="swatch-color" style="background:#1FAA59"></div><div class="swatch-meta"><div class="swatch-name">success</div><div class="swatch-hex">#1FAA59</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B8770E"></div><div class="swatch-meta"><div class="swatch-name">warning</div><div class="swatch-hex">#B8770E</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B23A2A"></div><div class="swatch-meta"><div class="swatch-name">danger</div><div class="swatch-hex">#B23A2A</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#2F6E8F"></div><div class="swatch-meta"><div class="swatch-name">info</div><div class="swatch-hex">#2F6E8F</div></div></div>
+  </div>
+
+  <div class="card-feature" style="margin-top: var(--s-10);">
+    <p style="margin: 0;"><strong>Regra inegociável:</strong> vermelho da marca nunca preenche botões grandes (visual de empréstimo agressivo). Vermelho aparece em ícones, números, selos pequenos, sublinhados, barras de seção. CTA principal = sempre verde WhatsApp.</p>
+  </div>
+</section>
+
+<!-- =================================================
+     2. TYPOGRAPHY
+================================================= -->
+<section id="typography" class="section" style="background: var(--surface-2);">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">02</span>
+      <h2>Tipografia</h2>
+      <span class="hint">Geist display + General Sans texto</span>
+    </div>
+
+    <div class="type-row">
+      <div class="display">Banco de bairro digital</div>
+      <div class="type-meta">.display · Geist 700 · clamp(2.5rem, 6vw, 4.5rem) · line-height 1.05 · tracking -0.025em</div>
+    </div>
+    <div class="type-row">
+      <h1>Empréstimo na conta de luz</h1>
+      <div class="type-meta">h1 · Geist 600 · clamp(2rem, 4.5vw, 3.25rem) · line-height 1.05</div>
+    </div>
+    <div class="type-row">
+      <h2>Como funciona em 4 passos</h2>
+      <div class="type-meta">h2 · Geist 600 · clamp(1.625rem, 3vw, 2.25rem) · line-height 1.2</div>
+    </div>
+    <div class="type-row">
+      <h3>Quem pode contratar</h3>
+      <div class="type-meta">h3 · General Sans 600 · 24px · line-height 1.2</div>
+    </div>
+    <div class="type-row">
+      <h4>O que você precisa pra começar</h4>
+      <div class="type-meta">h4 · General Sans 600 · 20px</div>
+    </div>
+    <div class="type-row">
+      <p class="lead">Empréstimo descontado direto na sua conta de luz, de R$ 400 a R$ 4.000, em até 18 parcelas no boleto da Copel.</p>
+      <div class="type-meta">.lead · General Sans 400 · 19px · color text-muted</div>
+    </div>
+    <div class="type-row">
+      <p>Mesmo com nome no SPC, a gente avalia. A Siga é correspondente bancário regulamentado pelo Banco Central desde 2020 e nunca pede pagamento adiantado.</p>
+      <div class="type-meta">body · General Sans 400 · 17px · line-height 1.65</div>
+    </div>
+    <div class="type-row">
+      <span class="label">Correspondente bancário</span>
+      <div class="type-meta">.label · General Sans 600 · 12px · uppercase · tracking 0.08em</div>
+    </div>
+    <div class="type-row">
+      <code class="mono">CPF 000.000.000-00 · Protocolo 2025-A4F92</code>
+      <div class="type-meta">.mono · JetBrains Mono 500 — apenas para CPF, protocolo, cláusula</div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     3. SPACING
+================================================= -->
+<section id="spacing" class="container section">
+  <div class="section-title">
+    <span class="num">03</span>
+    <h2>Espaçamento</h2>
+    <span class="hint">base 4px · container 1280px</span>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3 style="margin-bottom: var(--s-4);">Escala</h3>
+      <div class="spacing-row"><code>--s-1</code><div class="spacing-bar" style="width:4px;"></div><span style="color:var(--text-muted)">4px</span></div>
+      <div class="spacing-row"><code>--s-2</code><div class="spacing-bar" style="width:8px;"></div><span style="color:var(--text-muted)">8px</span></div>
+      <div class="spacing-row"><code>--s-3</code><div class="spacing-bar" style="width:12px;"></div><span style="color:var(--text-muted)">12px</span></div>
+      <div class="spacing-row"><code>--s-4</code><div class="spacing-bar" style="width:16px;"></div><span style="color:var(--text-muted)">16px</span></div>
+      <div class="spacing-row"><code>--s-6</code><div class="spacing-bar" style="width:24px;"></div><span style="color:var(--text-muted)">24px</span></div>
+      <div class="spacing-row"><code>--s-8</code><div class="spacing-bar" style="width:32px;"></div><span style="color:var(--text-muted)">32px</span></div>
+      <div class="spacing-row"><code>--s-12</code><div class="spacing-bar" style="width:48px;"></div><span style="color:var(--text-muted)">48px</span></div>
+      <div class="spacing-row"><code>--s-16</code><div class="spacing-bar" style="width:64px;"></div><span style="color:var(--text-muted)">64px</span></div>
+      <div class="spacing-row"><code>--s-24</code><div class="spacing-bar" style="width:96px;"></div><span style="color:var(--text-muted)">96px</span></div>
+      <div class="spacing-row"><code>--s-32</code><div class="spacing-bar" style="width:128px;"></div><span style="color:var(--text-muted)">128px</span></div>
+    </div>
+    <div>
+      <h3 style="margin-bottom: var(--s-4);">Seções e grid</h3>
+      <pre class="code">--container:       1280px
+--container-pad:   clamp(20px, 5vw, 56px)
+
+--section-y-sm:    clamp(48px, 8vw, 80px)
+--section-y-md:    clamp(64px, 10vw, 112px)
+--section-y-lg:    clamp(80px, 12vw, 144px)
+
+--grid-gap:        clamp(16px, 2vw, 32px)</pre>
+      <p class="lead" style="margin-top: var(--s-4); font-size: var(--fs-body);">Alterne <code>bg</code> → <code>surface</code> → <code>surface-2</code> → <code>surface-ink</code>. Nunca duas seções iguais consecutivas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     4. RADIUS
+================================================= -->
+<section id="radius" class="container section">
+  <div class="section-title">
+    <span class="num">04</span>
+    <h2>Border Radius</h2>
+  </div>
+  <div class="grid-4">
+    <div class="radius-box" style="border-radius: var(--r-sm);">--r-sm · 6px</div>
+    <div class="radius-box" style="border-radius: var(--r-md);">--r-md · 10px</div>
+    <div class="radius-box" style="border-radius: var(--r-lg);">--r-lg · 18px</div>
+    <div class="radius-box" style="border-radius: var(--r-full);">--r-full · 999</div>
+  </div>
+</section>
+
+<!-- =================================================
+     5. SHADOWS
+================================================= -->
+<section id="shadows" class="section bg-surface-2">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">05</span>
+      <h2>Sombras</h2>
+      <span class="hint">tinta vermelho diluída, profundidade quente</span>
+    </div>
+    <div class="grid-4">
+      <div class="shadow-card" style="box-shadow: var(--shadow-sm);"><strong>--shadow-sm</strong><br><small>cards</small></div>
+      <div class="shadow-card" style="box-shadow: var(--shadow-md);"><strong>--shadow-md</strong><br><small>hover card</small></div>
+      <div class="shadow-card" style="box-shadow: var(--shadow-lg);"><strong>--shadow-lg</strong><br><small>modais</small></div>
+      <div class="shadow-card" style="box-shadow: var(--shadow-xl);"><strong>--shadow-xl</strong><br><small>FAB WhatsApp</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     6. BUTTONS
+================================================= -->
+<section id="buttons" class="container section">
+  <div class="section-title">
+    <span class="num">06</span>
+    <h2>Botões</h2>
+    <span class="hint">3 níveis × 3 tamanhos</span>
+  </div>
+
+  <div class="grid-3">
+    <div class="demo-box">
+      <span class="demo-label">Primário · WhatsApp</span>
+      <button class="btn btn-primary btn-sm">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Simular
+      </button>
+      <button class="btn btn-primary btn-md">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Simular pelo WhatsApp
+      </button>
+      <button class="btn btn-primary btn-lg">
+        <svg class="icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Quero meu empréstimo
+      </button>
+    </div>
+
+    <div class="demo-box">
+      <span class="demo-label">Secundário · institucional</span>
+      <button class="btn btn-secondary btn-sm">Ver detalhes</button>
+      <button class="btn btn-secondary btn-md">Ligar grátis 0800</button>
+      <button class="btn btn-secondary btn-lg">
+        <svg class="icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Falar agora
+      </button>
+    </div>
+
+    <div class="demo-box">
+      <span class="demo-label">Ghost · terciário</span>
+      <button class="btn btn-ghost btn-sm">Ver mais</button>
+      <button class="btn btn-ghost btn-md">Simular sem WhatsApp</button>
+      <button class="btn btn-ghost btn-lg">
+        Ver todos os produtos
+        <svg class="icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top: var(--s-8);">
+    <div class="demo-box">
+      <span class="demo-label">Estado disabled</span>
+      <button class="btn btn-primary btn-md" disabled>Aguardando dados…</button>
+    </div>
+    <div class="demo-box">
+      <span class="demo-label">Hover / focus (passe o mouse)</span>
+      <button class="btn btn-primary btn-md">Hover gera lift de 1px + shadow-md</button>
+    </div>
+    <div class="demo-box">
+      <span class="demo-label">Com loading</span>
+      <button class="btn btn-secondary btn-md" aria-busy="true">Enviando…</button>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     7. CARDS
+================================================= -->
+<section id="cards" class="section bg-surface-2">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">07</span>
+      <h2>Cards</h2>
+      <span class="hint">default · destacado · sutil</span>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <span class="label" style="color: var(--brand-red);">Produto</span>
+        <h3 style="margin-top: var(--s-3);">Empréstimo na conta de luz</h3>
+        <p style="margin-top: var(--s-3); color: var(--text-muted);">De R$ 400 a R$ 4.000 no Pix em 24h. Parcelas descontadas no boleto da Copel.</p>
+        <a href="#" class="btn btn-ghost btn-sm" style="margin-top: var(--s-5);">Quero esse →</a>
+      </div>
+
+      <div class="card-feature">
+        <span class="label" style="color: var(--brand-red);">Em foco</span>
+        <h3 style="margin-top: var(--s-3);">FGTS Saque-Aniversário</h3>
+        <p style="margin-top: var(--s-3); color: var(--text-muted);">Até R$ 29 mil no Pix em 1h30. Sem comprometer o salário.</p>
+        <a href="#" class="btn btn-primary btn-sm" style="margin-top: var(--s-5);">Simular pelo WhatsApp</a>
+      </div>
+
+      <div class="card-subtle">
+        <h4>Atendimento humano</h4>
+        <p style="margin-top: var(--s-2); color: var(--text-muted); font-size: var(--fs-small);">7 anos de operação em Londrina/PR. 1.000 atendimentos por dia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     8. FORMS
+================================================= -->
+<section id="forms" class="container section">
+  <div class="section-title">
+    <span class="num">08</span>
+    <h2>Formulários</h2>
+  </div>
+
+  <div class="grid-2" style="max-width: 720px;">
+    <div>
+      <label class="input-label" for="ds-nome">Nome <span style="color:var(--brand-red);">*</span></label>
+      <input class="input" id="ds-nome" type="text" placeholder="Maria Aparecida" autocomplete="name">
+      <p class="input-help">Como aparece no seu RG</p>
+    </div>
+    <div>
+      <label class="input-label" for="ds-tel">Telefone <span style="color:var(--brand-red);">*</span></label>
+      <input class="input" id="ds-tel" type="tel" placeholder="(43) 99999-0000" autocomplete="tel-national">
+    </div>
+    <div>
+      <label class="input-label" for="ds-cpf">CPF</label>
+      <input class="input" id="ds-cpf" type="text" placeholder="000.000.000-00" aria-invalid="true" aria-describedby="ds-cpf-err">
+      <p class="input-error" id="ds-cpf-err">CPF incompleto. Falta o último dígito.</p>
+    </div>
+    <div>
+      <label class="input-label" for="ds-prod">Produto</label>
+      <select class="input" id="ds-prod">
+        <option>Conta de luz</option>
+        <option>Bolsa Família</option>
+        <option>CLT</option>
+        <option>FGTS</option>
+      </select>
+    </div>
+    <div style="grid-column: 1 / -1;">
+      <label class="input-label" for="ds-msg">Conta um pouco do seu caso</label>
+      <textarea class="input" id="ds-msg" placeholder="Pra que você precisa do empréstimo?"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     9. BADGES
+================================================= -->
+<section id="badges" class="section bg-surface-2">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">09</span>
+      <h2>Selos institucionais</h2>
+    </div>
+
+    <div style="display: flex; gap: var(--s-3); flex-wrap: wrap;">
+      <span class="badge badge-trust">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        Correspondente bancário regulamentado
+      </span>
+      <span class="badge badge-time">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Atendimento 24h
+      </span>
+      <span class="badge badge-secure">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Sigilo total
+      </span>
+    </div>
+
+    <div class="card-feature" style="margin-top: var(--s-8); display: flex; gap: var(--s-4); align-items: flex-start; background: var(--brand-cream); border-color: var(--border-strong);">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--brand-red)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v7"/><path d="M14 16V6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"/><path d="M18 12a2 2 0 0 1 2 2v3a6 6 0 0 1-6 6h-3.5a4 4 0 0 1-2.85-1.18L4 17"/></svg>
+      <div>
+        <h4>A Siga nunca pede depósito antecipado</h4>
+        <p style="margin-top: var(--s-2); color: var(--text-muted); font-size: var(--fs-small);">Se alguém pedir, é golpe. Liga pra gente no 0800 e a gente investiga.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     10. ICONS
+================================================= -->
+<section id="icons" class="container section">
+  <div class="section-title">
+    <span class="num">10</span>
+    <h2>Ícones · Lucide</h2>
+    <span class="hint">stroke 1.75 · currentColor · 24×24 viewBox</span>
+  </div>
+
+  <div class="icon-grid">
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>phone</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>message-circle</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>lock</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><span>shield-check</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>check</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>info</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>triangle-alert</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>lightbulb</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>users</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>briefcase</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2h0V5z"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><path d="M16 11h0"/></svg><span>piggy-bank</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>file-text</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><span>smartphone</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>star</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg><span>chevron-down</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span>arrow-right</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>map-pin</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>calendar-days</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>clock</span></div>
+    <div class="icon-tile"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v7"/><path d="M14 16V6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"/><path d="M18 12a2 2 0 0 1 2 2v3a6 6 0 0 1-6 6h-3.5a4 4 0 0 1-2.85-1.18L4 17"/></svg><span>handshake</span></div>
+  </div>
+
+  <div class="card-feature" style="margin-top: var(--s-8);">
+    <p style="margin: 0;"><strong>Regra dura:</strong> nunca misturar bibliotecas. Se faltar ícone na Lucide, desenhar SVG seguindo as mesmas métricas (stroke 1.75, linecap round, linejoin round). Nunca importar de Phosphor/Tabler/Heroicons no meio.</p>
+  </div>
+</section>
+
+<!-- =================================================
+     11. PATTERNS
+================================================= -->
+<section id="patterns" class="container section">
+  <div class="section-title">
+    <span class="num">11</span>
+    <h2>Patterns</h2>
+    <span class="hint">opacidade 0.04–0.08 sempre</span>
+  </div>
+  <div class="grid-2">
+    <div class="pattern-dots" style="padding: var(--s-12); border-radius: var(--r-md);">
+      <span class="label">Pattern A · dots</span>
+      <p style="margin-top: var(--s-2);">Organização, firmeza. Uso em cabeçalho institucional, bloco "sobre a Siga".</p>
+    </div>
+    <div class="pattern-stripes" style="padding: var(--s-12); border-radius: var(--r-md);">
+      <span class="label">Pattern B · diagonal stripes</span>
+      <p style="margin-top: var(--s-2);">Carimbo, documento oficial. Selo anti-golpe, rodapé com endereço físico.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================
+     12. ANTI-PATTERNS
+================================================= -->
+<section id="anti" class="section bg-ink">
+  <div class="container">
+    <div class="section-title" style="border-bottom-color: rgba(251,248,243,.15);">
+      <span class="num">12</span>
+      <h2 style="color: var(--text-on-dark);">Anti-padrões</h2>
+      <span class="hint" style="color: var(--brand-stone);">proibições inegociáveis</span>
+    </div>
+
+    <ul class="anti-list" style="color: var(--text-on-dark);">
+      <li>Vermelho como fundo de botão grande — visual de empréstimo agressivo.</li>
+      <li>Gradiente roxo/azul em fundo escuro — cara de IA.</li>
+      <li>Grid uniforme de cards <code style="color:var(--brand-stone)">bg-white + shadow-md + rounded-lg</code> repetido página inteira.</li>
+      <li>Ilustrações vetoriais de pessoas felizes abstratas (estilo Storyset/Undraw).</li>
+      <li>Material Icons em círculos coloridos.</li>
+      <li>Inter/Roboto/Arial. Sempre Geist + General Sans.</li>
+      <li>Hero centralizado com CTA gigante no meio — usar layout assimétrico.</li>
+      <li>Copy "OFERTA IMPERDÍVEL", "ÚLTIMA CHANCE", contagem regressiva, ícone de fogo.</li>
+      <li><code style="color:var(--brand-stone)">transition: all</code> — sempre transform e opacity específicos.</li>
+      <li>Animar texto principal de hero ou CTA — atrasa a decisão.</li>
+      <li>Parallax pesado em scroll, scroll-jacking, carrossel com auto-play.</li>
+      <li>WebGL. Público mobile-heavy, low-end Android — nada de canvas/Three.js.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="container" style="padding: var(--s-12) 0; text-align: center; color: var(--text-subtle); font-size: var(--fs-small);">
+  Siga Crédito · Design System v1.0 · Outubro 2025 · Source of truth: <code>design_system/DESIGN.md</code>
+</footer>
+
+<!-- FAB demo -->
+<a href="#" class="fab" aria-label="Falar pelo WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</a>
+
+</body>
+</html>

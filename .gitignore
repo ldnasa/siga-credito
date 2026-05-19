@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────────
+# .gitignore — Siga Crédito
+# Repo serve como source-of-truth do site servido pelo LDNA Deploy.
+# Pastas de dev (referências, screenshots, archive) NÃO entram.
+# ─────────────────────────────────────────────────────────────
+
+# Claude Code local config (ferramenta de dev, pode ter paths sensíveis)
+.claude/
+
+# Material de referência / WIP / arquivado — só local, não vai pro repo
+refs/
+screenshots/
+_archive/
+
+# Source files de design não-web (não shippa, pesado)
+*.psd
+*.ai
+*.eps
+*.sketch
+*.fig
+*.afphoto
+*.afdesign
+*.indd
+
+# OS lixo
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs / dumps
+*.log
+
+# Deploy local junk
+*.zip
+node_modules/
