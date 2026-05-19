@@ -2528,7 +2528,12 @@
   .fraud-band-body { text-align: center; margin-left: auto; margin-right: auto; }
   .fraud-band-actions { justify-content: center; }
   .fraud-pillars { text-align: center; }
-  .fraud-pillar { flex-direction: column; align-items: center; gap: var(--s-2); }
+  .fraud-band .fraud-pillar {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-2);
+    text-align: center;
+  }
 }
 
 /* Pillars list inside fraud band (3 mini claims) */
@@ -3635,10 +3640,15 @@ body.has-modal-open { overflow: hidden; }
   }
   .footer-bottom-meta,
   .footer-legal { justify-content: center; }
+  .site-footer .socials { justify-content: center; }
 
   /* Blog list (Conteúdos complementares) — vira carrossel de cards verticais */
-  .editorial-v2-list {
+  .editorial-v2 { grid-template-columns: minmax(0, 1fr); }
+  .editorial-v2-list-wrap { min-width: 0; width: 100%; }
+  .editorial-v2-list-wrap .editorial-v2-list {
     flex-direction: row;
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     overflow-y: visible;
     scroll-snap-type: x mandatory;
@@ -3648,22 +3658,30 @@ body.has-modal-open { overflow: hidden; }
     padding-bottom: var(--s-4);
     margin-inline: calc(var(--container-pad) * -1);
     padding-inline: var(--container-pad);
+    align-items: stretch;
   }
-  .editorial-v2-list::-webkit-scrollbar { display: none; }
-  .editorial-v2-list li {
+  .editorial-v2-list-wrap .editorial-v2-list::-webkit-scrollbar { display: none; }
+  .editorial-v2-list-wrap .editorial-v2-list li {
     flex: 0 0 78%;
     scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
   }
-  .editorial-v2-list a {
+  .editorial-v2-list-wrap .editorial-v2-list a {
     grid-template-columns: 1fr;
     padding: 0;
     padding-bottom: var(--s-4);
     align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
-  .editorial-v2-list-thumb {
+  .editorial-v2-list-wrap .editorial-v2-list-thumb {
     aspect-ratio: 16/10;
     border-radius: 0;
+    width: 100%;
+    height: auto;
   }
-  .editorial-v2-list-meta { padding-inline: var(--s-4); margin-top: var(--s-4); }
-  .editorial-v2-list-title { padding-inline: var(--s-4); }
+  .editorial-v2-list-wrap .editorial-v2-list-meta { padding-inline: var(--s-4); margin-top: var(--s-4); }
+  .editorial-v2-list-wrap .editorial-v2-list-title { padding-inline: var(--s-4); }
 }
