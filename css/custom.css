@@ -402,6 +402,11 @@
 @media (min-width: 640px) { .product-selector { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) { .product-selector { grid-template-columns: repeat(4, 1fr); } }
 
+/* Compromissos (Sobre): 3 cards, layout 1 → 3 cols (sem etapa intermediária) */
+.compromissos-grid { grid-template-columns: 1fr; }
+@media (min-width: 768px) { .compromissos-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .compromissos-grid { grid-template-columns: repeat(3, 1fr); } }
+
 .product-card {
   position: relative;
   background: var(--surface);
@@ -3566,7 +3571,8 @@ body.has-modal-open { overflow: hidden; }
 
   /* Carrosséis horizontais — product bento + depoimentos */
   .product-bento,
-  .test-row {
+  .test-row,
+  .testimonials {
     display: flex;
     grid-template-columns: none;
     grid-auto-rows: auto;
@@ -3582,13 +3588,15 @@ body.has-modal-open { overflow: hidden; }
     min-height: 0;
   }
   .product-bento::-webkit-scrollbar,
-  .test-row::-webkit-scrollbar { display: none; }
+  .test-row::-webkit-scrollbar,
+  .testimonials::-webkit-scrollbar { display: none; }
   .product-bento > * {
     flex: 0 0 85%;
     scroll-snap-align: start;
     min-height: 320px;
   }
-  .test-row > * {
+  .test-row > *,
+  .testimonials > * {
     flex: 0 0 88%;
     scroll-snap-align: start;
   }
