@@ -89,10 +89,10 @@
   cursor: pointer;
   background: none;
   border: none;
-  font: inherit;
-  color: inherit;
   padding: var(--s-2) var(--s-3);
   border-radius: var(--r-sm);
+  /* font + color herdam de .nav-link (mesma especificidade, mas .nav-link
+     vem antes no CSS — então essa regra só zera os defaults de <button>) */
 }
 .nav-dropdown-trigger svg { transition: transform 200ms ease-out; }
 .nav-dropdown[aria-expanded="true"] .nav-dropdown-trigger svg { transform: rotate(180deg); }
