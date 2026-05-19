@@ -2383,7 +2383,7 @@
   border-right: 1px solid var(--border);
   position: relative;
 }
-@media (max-width: 767px) { .process-strip-step { border-right: none; border-bottom: 1px solid var(--border); } }
+@media (max-width: 767px) { .process-strip-step { border-right: none; border-bottom: 1px solid var(--border); text-align: center; } }
 .process-strip-step:last-child { border-right: none; }
 .process-strip-num {
   font: 700 clamp(2.5rem, 4vw, 3rem)/1 var(--font-display);
