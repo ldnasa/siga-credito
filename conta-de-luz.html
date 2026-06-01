@@ -141,11 +141,15 @@
     </section>
 
     <section class="hero-photo-block">
-      <img class="hero-v3-card-img"
-           src="assets/images/hero-conta-de-luz-editorial-generic.png"
-           alt="Cliente mostrando fatura de energia para simular empréstimo"
-           loading="eager"
-           fetchpriority="high">
+      <picture>
+        <source srcset="assets/images/hero-conta-de-luz-editorial-generic.avif" type="image/avif">
+        <img class="hero-v3-card-img"
+             src="assets/images/hero-conta-de-luz-editorial-generic.webp"
+             alt="Cliente mostrando fatura de energia para simular empréstimo"
+             width="1000" height="1250"
+             loading="eager"
+             fetchpriority="high">
+      </picture>
 
       <div class="hero-v3-pill is-top">
         <span class="hero-v3-pill-icon is-green">
