@@ -281,7 +281,7 @@
       const status = form.querySelector('[data-form-status]');
       if (status) {
         status.hidden = false;
-        status.textContent = 'Recebemos. A gente te chama em até 1 hora no WhatsApp.';
+        status.textContent = 'Recebemos. A gente te chama no WhatsApp com a proposta.';
         status.setAttribute('role', 'status');
       }
       form.reset();
@@ -302,6 +302,17 @@
     'fgts': 'FGTS Saque-Aniversário',
   };
 
+  // WhatsApp dedicado por produto (fallback = conta de luz, número principal)
+  const LOAN_NUMBERS = {
+    'conta-de-luz': '5543988014727',
+    'bolsa-familia': '5543988075957',
+    'clt': '5543967250239',
+    'fgts': '5543955482629',
+  };
+  const DEFAULT_WA = '5543988014727';
+
+  const ENERGY_COMPANIES = ['Celpe', 'Coelba', 'Copel', 'Cosern', 'CPFL Paulista', 'CPFL Piratininga', 'CPFL Santa Cruz', 'Elektro', 'Enel CE', 'Enel RJ', 'Enel SP', 'RGE', 'Outra'];
+
   function buildContactModal() {
     if (document.getElementById('contactModal')) return document.getElementById('contactModal');
     const modal = document.createElement('div');
@@ -318,8 +329,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
         <div class="contact-modal-head">
-          <span class="contact-modal-eyebrow">Resposta em até 1h no WhatsApp</span>
-          <h2 class="contact-modal-title" id="contactModalTitle">Conta um pouco do seu caso</h2>
+          <span class="contact-modal-eyebrow">Receba uma proposta no WhatsApp</span>
+          <h2 class="contact-modal-title" id="contactModalTitle">Solicite uma simulação agora</h2>
           <p class="contact-modal-lead">Preenche os dados que a gente te chama com a proposta. Sem compromisso, sem letra miúda.</p>
         </div>
         <form class="contact-modal-form" novalidate>
@@ -341,8 +352,16 @@
           </div>
           <div class="form-grid">
             <div class="form-field">
-              <label for="modal-name" class="input-label">Nome</label>
-              <input id="modal-name" class="input" type="text" name="name" placeholder="Como te chamam" required autocomplete="name">
+              <label for="modal-name" class="input-label">Nome completo</label>
+              <input id="modal-name" class="input" type="text" name="name" placeholder="Seu nome completo" required autocomplete="name">
+            </div>
+            <div class="form-field">
+              <label for="modal-cpf" class="input-label">CPF</label>
+              <input id="modal-cpf" class="input" type="text" name="cpf" placeholder="000.000.000-00" inputmode="numeric" required>
+            </div>
+            <div class="form-field">
+              <label for="modal-birth" class="input-label">Data de nascimento</label>
+              <input id="modal-birth" class="input" type="date" name="birth" required autocomplete="bday">
             </div>
             <div class="form-field">
               <label for="modal-phone" class="input-label">WhatsApp</label>
@@ -352,9 +371,12 @@
               <label for="modal-email" class="input-label">E-mail</label>
               <input id="modal-email" class="input" type="email" name="email" placeholder="seu@email.com" autocomplete="email">
             </div>
-            <div class="form-field">
-              <label for="modal-cpf" class="input-label">CPF</label>
-              <input id="modal-cpf" class="input" type="text" name="cpf" placeholder="000.000.000-00" inputmode="numeric" required>
+            <div class="form-field" data-field="energy" hidden>
+              <label for="modal-energy" class="input-label">Qual é a sua empresa de energia?</label>
+              <select id="modal-energy" class="input" name="energy">
+                <option value="">Selecione</option>
+                ${ENERGY_COMPANIES.map((c) => `<option value="${c}">${c}</option>`).join('')}
+              </select>
             </div>
           </div>
           <input type="text" name="website" tabindex="-1" aria-hidden="true" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
@@ -371,8 +393,8 @@
           <div class="contact-modal-success-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3>Recebido. Em até 1h a gente te chama.</h3>
-          <p>Resposta vem direto no WhatsApp do número que você informou.</p>
+          <h3>Recebido. A gente te chama no WhatsApp.</h3>
+          <p>A proposta vem direto no WhatsApp do número que você informou.</p>
         </div>
       </div>
     `;
@@ -387,6 +409,8 @@
     const chip = modal.querySelector('[data-loan-chip]');
     const chipLabel = modal.querySelector('[data-loan-chip-label]');
     const loanField = modal.querySelector('[data-field="loan-type"] .input-label');
+    const energyField = modal.querySelector('[data-field="energy"]');
+    const energySelect = modal.querySelector('#modal-energy');
     const form = modal.querySelector('.contact-modal-form');
     const success = modal.querySelector('.contact-modal-success');
 
@@ -397,6 +421,13 @@
         chip.hidden = false;
       } else {
         chip.hidden = true;
+      }
+      // Campo "empresa de energia" só aparece (e é obrigatório) no produto conta de luz
+      if (energyField) {
+        const isLuz = v === 'conta-de-luz';
+        energyField.hidden = !isLuz;
+        if (energySelect) energySelect.required = isLuz;
+        if (!isLuz && energySelect) energySelect.value = '';
       }
     }
 
@@ -459,12 +490,17 @@
       if ((data.get('website') || '').trim() !== '') return; // honeypot
       const loanValue = data.get('loan_type');
       const loanLabel = LOAN_LABELS[loanValue] || 'Empréstimo';
-      const msg = `Oi! Quero simular: ${loanLabel}.\n\n` +
+      let msg = `Oi! Quero simular: ${loanLabel}.\n\n` +
         `Nome: ${data.get('name')}\n` +
         `CPF: ${data.get('cpf')}\n` +
-        `E-mail: ${data.get('email') || '-'}\n` +
-        `WhatsApp: ${data.get('phone')}`;
-      const waUrl = `https://wa.me/5543999999999?text=${encodeURIComponent(msg)}`;
+        `Nascimento: ${data.get('birth') || '-'}\n` +
+        `WhatsApp: ${data.get('phone')}\n` +
+        `E-mail: ${data.get('email') || '-'}`;
+      if (loanValue === 'conta-de-luz' && data.get('energy')) {
+        msg += `\nEmpresa de energia: ${data.get('energy')}`;
+      }
+      const waNumber = LOAN_NUMBERS[loanValue] || DEFAULT_WA;
+      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
       window.open(waUrl, '_blank', 'noopener');
       form.hidden = true;
       success.hidden = false;
