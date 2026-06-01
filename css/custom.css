@@ -623,6 +623,17 @@
   white-space: nowrap;
 }
 
+/* Chip escuro p/ logo desenhado para fundo escuro (ex.: 2S Consig) */
+.partners-ticker-item.is-chip,
+.partners-marquee-item.is-chip {
+  background: var(--surface-ink);
+  border-radius: var(--r-md);
+  padding: 6px 14px;
+  height: auto;
+}
+.partners-ticker-item.is-chip img { height: 28px; max-width: 120px; }
+.partners-marquee-item.is-chip img { height: 30px; max-width: 130px; }
+
 /* ------------------------------------------------------------
    TESTIMONIALS
    ------------------------------------------------------------ */
