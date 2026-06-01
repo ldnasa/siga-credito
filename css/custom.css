@@ -611,9 +611,9 @@
   height: 44px;
 }
 .partners-marquee-item img {
-  height: 38px;
+  height: 34px;
   width: auto;
-  max-width: 160px;
+  max-width: 240px;
   object-fit: contain;
 }
 .partners-marquee-item.is-text {
@@ -2108,9 +2108,9 @@
 }
 .partners-ticker-item img {
   display: block;
-  height: 32px;
+  height: 30px;
   width: auto;
-  max-width: 180px;
+  max-width: 240px;
   object-fit: contain;
 }
 
