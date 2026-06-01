@@ -583,6 +583,47 @@
 }
 
 /* ------------------------------------------------------------
+   LOGO MARQUEE (concessionárias / bancos parceiros)
+   Colorido, tamanhos padronizados, movimento lento direita→esquerda.
+   Sem hover (95% mobile). Reaproveita keyframe ticker-scroll.
+   ------------------------------------------------------------ */
+.partners-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.partners-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(36px, 6vw, 80px);
+  width: max-content;
+  animation: ticker-scroll 32s linear infinite;
+}
+.partners-marquee:hover .partners-marquee-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .partners-marquee-track { animation: none; transform: translateX(0); }
+}
+.partners-marquee-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  height: 44px;
+}
+.partners-marquee-item img {
+  height: 38px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+}
+.partners-marquee-item.is-text {
+  font: 700 clamp(1.0625rem, 1.6vw, 1.375rem) var(--font-display);
+  color: var(--brand-red);
+  letter-spacing: var(--tr-tight);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------
    TESTIMONIALS
    ------------------------------------------------------------ */
 .testimonials {
