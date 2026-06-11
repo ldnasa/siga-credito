@@ -56,10 +56,11 @@
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  height: 36px;
+  height: 48px; /* logo stacked ("crédito" abaixo de "Siga") precisa de mais altura que o horizontal */
   flex-shrink: 0;
 }
-.site-logo svg { height: 100%; width: auto; }
+.site-logo svg,
+.site-logo img { height: 100%; width: auto; }
 
 .main-nav {
   display: none;
@@ -164,7 +165,7 @@
   .site-header .header-actions > .btn-primary { display: none; }
   .site-header .container { padding-inline: var(--s-4); }
   .site-header .container { gap: var(--s-2); }
-  .site-logo { height: 32px; }
+  .site-logo { height: 42px; }
 }
 
 .mobile-menu {
@@ -694,6 +695,30 @@
 .testimonial-meta { display: flex; flex-direction: column; }
 .testimonial-name { font: 600 var(--fs-small) var(--font-text); color: var(--brand-ink); }
 .testimonial-context { font: 400 var(--fs-caption) var(--font-text); color: var(--text-subtle); }
+
+/* Avaliações estilo Google — estrelas + marca G no topo do card */
+.testimonial-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-3);
+}
+.testimonial-stars { display: inline-flex; gap: 2px; color: #FBBC04; }
+.testimonial-stars svg { width: 15px; height: 15px; }
+.testimonial-gmark { display: inline-flex; flex-shrink: 0; }
+.testimonial-gmark svg { width: 18px; height: 18px; display: block; }
+.testimonial-quote {
+  font: 400 var(--fs-small)/var(--lh-body) var(--font-text);
+  color: var(--brand-ink);
+  margin: 0;
+}
+.google-reviews-cta {
+  margin-top: var(--s-8);
+  display: flex;
+  justify-content: center;
+}
+.google-reviews-cta .testimonial-gmark svg { width: 16px; height: 16px; }
 
 /* ------------------------------------------------------------
    ANTI-FRAUD BLOCK — selo de compromisso, não banner de alerta
@@ -2546,8 +2571,8 @@
 .fraud-band .btn-ghost { color: var(--text-on-dark); border-color: rgba(251,248,243,.3); }
 .fraud-band .btn-ghost:hover { background: rgba(251,248,243,.1); }
 /* Botão 0800 no selo — fundo creme p/ destacar do bloco escuro (não preto-sobre-preto) */
-.fraud-band-phone { background: var(--brand-cream); color: var(--brand-ink); border-color: transparent; }
-.fraud-band-phone:hover { background: #E6D5B5; transform: translateY(-1px); }
+.fraud-band-phone { background: #FFFFFF; color: var(--brand-ink); border-color: transparent; }
+.fraud-band-phone:hover { background: var(--brand-cream); transform: translateY(-1px); }
 .fraud-band-phone .icon { color: var(--brand-red); }
 
 /* Selo de Compromisso — mobile: center alignment + glow ajustado ao centro */
@@ -3268,7 +3293,7 @@ body {
 .contact-modal {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 400; /* acima do menu mobile (--z-modal: 300) — o formulário nunca fica atrás */
   display: none;
   align-items: flex-start;
   justify-content: center;
@@ -3392,6 +3417,33 @@ body {
 }
 .contact-modal-loan-chip[hidden] { display: none !important; }
 .contact-modal-loan-chip svg { color: var(--brand-red); flex-shrink: 0; }
+
+.contact-modal-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  font: 400 var(--fs-small)/var(--lh-body) var(--font-text);
+  color: var(--text);
+  cursor: pointer;
+}
+.contact-modal-consent input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--cta-green);
+  cursor: pointer;
+}
+.contact-modal-consent input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--cta-green);
+  outline-offset: 2px;
+}
+.contact-modal-consent a {
+  color: var(--brand-red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.contact-modal-consent a:hover { color: var(--brand-red-deep); }
 
 .contact-modal-trust {
   font: 400 var(--fs-caption)/var(--lh-body) var(--font-text);
@@ -3724,4 +3776,195 @@ body.has-modal-open { overflow: hidden; }
   }
   .editorial-v2-list-wrap .editorial-v2-list-meta { padding-inline: var(--s-4); margin-top: var(--s-4); }
   .editorial-v2-list-wrap .editorial-v2-list-title { padding-inline: var(--s-4); }
+}
+
+/* ============================================================
+   AJUSTES FINAIS (feedback do cliente, jun/2026)
+   1. Seções mais enquadradas na tela (margens verticais menores)
+   2. Botão de seção depois do conteúdo no mobile
+   3. Indicadores de carrossel (dots + setas) nos trilhos horizontais
+   4. Stats alinhados no mobile
+   ============================================================ */
+
+/* 1. Padding vertical de seção reduzido — sobrepõe tokens.css */
+:root {
+  --section-y-sm: clamp(36px, 5vw, 60px);
+  --section-y-md: clamp(44px, 6.5vw, 80px);
+  --section-y-lg: clamp(56px, 8vw, 104px);
+}
+
+/* 3. Carousel nav — só aparece quando o trilho transborda (mobile) */
+.carousel-nav {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-4);
+  margin-top: calc(var(--s-2) * -1);
+}
+.carousel-nav.is-active { display: flex; }
+.carousel-dots { display: flex; gap: var(--s-2); }
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-full);
+  border: none;
+  background: var(--border-strong);
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 200ms ease-out, transform 200ms ease-out;
+}
+.carousel-dot.is-current {
+  background: var(--brand-red);
+  transform: scale(1.25);
+}
+.carousel-dot:focus-visible { outline: 2px solid var(--cta-green); outline-offset: 2px; }
+.carousel-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--brand-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 200ms ease-out, opacity 200ms ease-out;
+}
+.carousel-arrow:disabled { opacity: .35; cursor: default; }
+.carousel-arrow:not(:disabled):hover { background: var(--surface-2); }
+.carousel-arrow:focus-visible { outline: 2px solid var(--cta-green); outline-offset: 2px; }
+.block-ink .carousel-arrow { background: transparent; color: var(--text-on-dark); border-color: var(--brand-stone); }
+.block-ink .carousel-dot { background: var(--brand-stone); }
+.block-ink .carousel-dot.is-current { background: var(--brand-red); }
+
+@media (max-width: 767px) {
+  /* 2. Botão do cabeçalho de seção desce pra depois do conteúdo */
+  .block > .container:has(> .section-head-row) {
+    display: flex;
+    flex-direction: column;
+  }
+  .block > .container:has(> .section-head-row) .section-head-row { display: contents; }
+  .block > .container:has(> .section-head-row) .section-head-row > div:first-child {
+    order: 0;
+    margin-bottom: var(--s-6);
+  }
+  .block > .container:has(> .section-head-row) .section-head-row > .btn {
+    order: 99;
+    margin-top: var(--s-6);
+    align-self: center;
+  }
+
+  /* 4. Stats — cards mais baixos, textos alinhados entre colunas */
+  .stat-monumental { gap: var(--s-3); }
+  .stat-mono {
+    min-height: 150px;
+    padding: var(--s-5) var(--s-4) var(--s-4);
+  }
+  .stat-mono-eyebrow { margin-bottom: var(--s-3); }
+  .stat-mono-num { font-size: clamp(1.9rem, 9vw, 2.5rem); }
+  .stat-mono-label { max-width: none; font-size: var(--fs-caption); }
+
+  /* Carrossel: respiro entre trilho e indicadores */
+  .carousel-nav { margin-top: var(--s-1); }
+
+  /* Hero mobile mais enquadrado */
+  .hero-row { gap: var(--s-3); }
+}
+
+/* Enquadramento desktop — cada seção mais próxima de caber em 1366x768 */
+.section-head-row { margin-bottom: var(--s-8); }
+.hero-text-block { padding-block: clamp(40px, 4vw, 64px); }
+.hero-photo-block { min-height: 520px; }
+@media (min-width: 768px) {
+  .product-bento { min-height: 480px; }
+}
+.fraud-band.block-lg { padding-block: var(--section-y-md); }
+.editorial-v2-feature-media img { aspect-ratio: 16/8; }
+
+/* Ajuste fino de enquadramento */
+:root {
+  --section-y-md: clamp(40px, 5.5vw, 72px);
+}
+.hero-text-block { padding-block: clamp(36px, 3.5vw, 56px); }
+.hero-photo-block { min-height: 480px; }
+@media (min-width: 768px) {
+  .product-bento { min-height: 440px; gap: var(--s-4); }
+  .product-bento-card { padding: var(--s-5); }
+  .product-bento-card.is-hero { padding: var(--s-6); }
+}
+.hero-text-block .hero-headline { font-size: clamp(2.5rem, 5vw, 4rem); }
+
+/* Mobile compacto — passos "Como Funciona" com número à esquerda
+   e selo anti-golpe mais enxuto (feedback: enquadrar e distribuir caixas) */
+@media (max-width: 767px) {
+  .process-strip-step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    column-gap: var(--s-4);
+    align-items: start;
+    text-align: left;
+    padding: var(--s-5) var(--s-2);
+  }
+  .process-strip-num {
+    grid-row: 1 / span 2;
+    font-size: 2.25rem;
+    margin-bottom: 0;
+    line-height: 1.1;
+  }
+  .process-strip-title { margin-bottom: var(--s-1); }
+
+  .fraud-band-grid { gap: var(--s-8); }
+  .fraud-band-seal { width: 112px; height: 112px; }
+  .fraud-band-seal svg { width: 48px; height: 48px; }
+  .fraud-pillars { gap: var(--s-4); }
+}
+
+/* Fix mobile: lead colado na h2, respiro antes do trilho,
+   e nav do carrossel sempre centralizado na seção */
+.carousel-nav {
+  align-self: center;
+  width: 100%;
+  margin-inline: auto;
+}
+@media (max-width: 767px) {
+  .block > .container:has(> .section-head-row) .section-head-row > div:has(+ .section-lead) {
+    margin-bottom: var(--s-1);
+  }
+  .block > .container:has(> .section-head-row) .section-head-row > .section-lead {
+    margin: 0 auto var(--s-6) !important; /* vence o margin-bottom:0 inline do desktop */
+  }
+}
+
+/* Mobile: tudo centralizado nas seções (consistência) —
+   eyebrow com traço, textos de apoio e bloco anti-golpe */
+@media (max-width: 767px) {
+  .block .section-eyebrow {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Texto de apoio + ação das cta-rows (ex.: "Não achou a sua?") */
+  .cta-row { text-align: center; }
+  .cta-row .cta-row-text { margin-inline: auto; }
+  .cta-row .cta-row-actions { justify-content: center; }
+
+  /* Parágrafo de apoio após tabela de limites */
+  .fact-table ~ p { text-align: center; }
+
+  /* Bloco "Atenção/Cuidado" (anti-fraud) das páginas de produto */
+  .anti-fraud {
+    text-align: center;
+    justify-items: center;
+  }
+  .anti-fraud-title,
+  .anti-fraud-body { margin-inline: auto; }
+  .anti-fraud-pillars li {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--s-2);
+  }
+  .anti-fraud-pillars li svg { margin-top: 0; }
+  .anti-fraud-cta { display: flex; justify-content: center; }
 }

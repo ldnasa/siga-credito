@@ -313,6 +313,12 @@
 
   const ENERGY_COMPANIES = ['Celpe', 'Coelba', 'Copel', 'Cosern', 'CPFL Paulista', 'CPFL Piratininga', 'CPFL Santa Cruz', 'Elektro', 'Enel CE', 'Enel RJ', 'Enel SP', 'RGE', 'Outra'];
 
+  // Pages inside subfolders (blog/) need a relative prefix to reach root pages
+  const ROOT_PREFIX = window.location.pathname.includes('/blog/') ? '../' : '';
+
+  // Glifo oficial do WhatsApp (SVG de marca, fill) — usado em botões verdes e FAB
+  const WHATSAPP_GLYPH = '<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/>';
+
   function buildContactModal() {
     if (document.getElementById('contactModal')) return document.getElementById('contactModal');
     const modal = document.createElement('div');
@@ -359,9 +365,9 @@
               <label for="modal-cpf" class="input-label">CPF</label>
               <input id="modal-cpf" class="input" type="text" name="cpf" placeholder="000.000.000-00" inputmode="numeric" required>
             </div>
-            <div class="form-field">
+            <div class="form-field" data-field="birth" hidden>
               <label for="modal-birth" class="input-label">Data de nascimento</label>
-              <input id="modal-birth" class="input" type="date" name="birth" required autocomplete="bday">
+              <input id="modal-birth" class="input" type="date" name="birth" autocomplete="bday">
             </div>
             <div class="form-field">
               <label for="modal-phone" class="input-label">WhatsApp</label>
@@ -380,12 +386,16 @@
             </div>
           </div>
           <input type="text" name="website" tabindex="-1" aria-hidden="true" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <label class="contact-modal-consent">
+            <input type="checkbox" name="privacy" required>
+            <span>Concordo com a <a href="${ROOT_PREFIX}privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+          </label>
           <p class="contact-modal-trust">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
             A Siga nunca pede pagamento adiantado. Seus dados não são compartilhados.
           </p>
           <button type="submit" class="btn btn-primary btn-lg contact-modal-submit">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${WHATSAPP_GLYPH}</svg>
             Enviar e ser contatado
           </button>
         </form>
@@ -411,6 +421,8 @@
     const loanField = modal.querySelector('[data-field="loan-type"] .input-label');
     const energyField = modal.querySelector('[data-field="energy"]');
     const energySelect = modal.querySelector('#modal-energy');
+    const birthField = modal.querySelector('[data-field="birth"]');
+    const birthInput = modal.querySelector('#modal-birth');
     const form = modal.querySelector('.contact-modal-form');
     const success = modal.querySelector('.contact-modal-success');
 
@@ -422,12 +434,18 @@
       } else {
         chip.hidden = true;
       }
-      // Campo "empresa de energia" só aparece (e é obrigatório) no produto conta de luz
+      // Data de nascimento + empresa de energia só aparecem (e são obrigatórios)
+      // no produto conta de luz. Demais produtos: nome, CPF, WhatsApp e e-mail.
+      const isLuz = v === 'conta-de-luz';
       if (energyField) {
-        const isLuz = v === 'conta-de-luz';
         energyField.hidden = !isLuz;
         if (energySelect) energySelect.required = isLuz;
         if (!isLuz && energySelect) energySelect.value = '';
+      }
+      if (birthField) {
+        birthField.hidden = !isLuz;
+        if (birthInput) birthInput.required = isLuz;
+        if (!isLuz && birthInput) birthInput.value = '';
       }
     }
 
@@ -440,6 +458,7 @@
     select.addEventListener('change', syncChip);
 
     function openModal() {
+      closeMobileMenu(); // formulário nunca pode abrir atrás do menu mobile
       modal.hidden = false;
       modal.classList.add('is-open');
       document.body.classList.add('has-modal-open');
@@ -493,11 +512,11 @@
       let msg = `Oi! Quero simular: ${loanLabel}.\n\n` +
         `Nome: ${data.get('name')}\n` +
         `CPF: ${data.get('cpf')}\n` +
-        `Nascimento: ${data.get('birth') || '-'}\n` +
         `WhatsApp: ${data.get('phone')}\n` +
         `E-mail: ${data.get('email') || '-'}`;
-      if (loanValue === 'conta-de-luz' && data.get('energy')) {
-        msg += `\nEmpresa de energia: ${data.get('energy')}`;
+      if (loanValue === 'conta-de-luz') {
+        if (data.get('birth')) msg += `\nNascimento: ${data.get('birth')}`;
+        if (data.get('energy')) msg += `\nEmpresa de energia: ${data.get('energy')}`;
       }
       const waNumber = LOAN_NUMBERS[loanValue] || DEFAULT_WA;
       const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
@@ -507,6 +526,72 @@
     });
   }
   setupContactModal();
+
+  /* ----------------------------------------------------------
+     Carousel dots + setas — trilhos horizontais com scroll-snap
+     (mobile). Só ativa quando o conteúdo de fato transborda.
+     ---------------------------------------------------------- */
+  function setupCarouselIndicators() {
+    const tracks = document.querySelectorAll('.product-bento, .test-row, .testimonials, .editorial-v2-list-wrap .editorial-v2-list');
+    tracks.forEach((track) => {
+      if (track.dataset.carouselWired === '1') return;
+      track.dataset.carouselWired = '1';
+
+      const slides = Array.from(track.children).filter((el) => el.getAttribute('aria-hidden') !== 'true');
+      if (slides.length < 2) return;
+
+      const nav = document.createElement('div');
+      nav.className = 'carousel-nav';
+      nav.innerHTML = `
+        <button type="button" class="carousel-arrow" data-dir="-1" aria-label="Anterior">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="carousel-dots" role="tablist" aria-label="Posição do carrossel"></div>
+        <button type="button" class="carousel-arrow" data-dir="1" aria-label="Próximo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>`;
+      track.insertAdjacentElement('afterend', nav);
+
+      const dotsWrap = nav.querySelector('.carousel-dots');
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'carousel-dot';
+        dot.setAttribute('aria-label', `Ir para o item ${i + 1}`);
+        dot.addEventListener('click', () => {
+          track.scrollTo({ left: slides[i].offsetLeft - slides[0].offsetLeft, behavior: 'smooth' });
+        });
+        dotsWrap.appendChild(dot);
+      });
+      const dots = Array.from(dotsWrap.children);
+
+      function activeIndex() {
+        const x = track.scrollLeft + track.clientWidth * 0.25;
+        let idx = 0;
+        slides.forEach((s, i) => { if (s.offsetLeft - slides[0].offsetLeft <= x) idx = i; });
+        return idx;
+      }
+      function sync() {
+        const overflowing = track.scrollWidth - track.clientWidth > 8;
+        nav.classList.toggle('is-active', overflowing);
+        if (!overflowing) return;
+        const idx = activeIndex();
+        dots.forEach((d, i) => d.classList.toggle('is-current', i === idx));
+        nav.querySelector('[data-dir="-1"]').toggleAttribute('disabled', track.scrollLeft <= 4);
+        nav.querySelector('[data-dir="1"]').toggleAttribute('disabled', track.scrollLeft >= track.scrollWidth - track.clientWidth - 4);
+      }
+      nav.querySelectorAll('.carousel-arrow').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Math.min(slides.length - 1, Math.max(0, activeIndex() + Number(btn.dataset.dir)));
+          track.scrollTo({ left: slides[idx].offsetLeft - slides[0].offsetLeft, behavior: 'smooth' });
+        });
+      });
+      track.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+    });
+  }
+  setupCarouselIndicators();
 
   /* ----------------------------------------------------------
      Active nav state by current path

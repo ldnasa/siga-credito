@@ -1,0 +1,203 @@
+Logomarca
+-prefiro usar a palavra "crédito" abaixo e não ao lado da palavra Siga.
+
+Formulário
+-para os produtos Bolsa, CLT e FGTS só precisa dos campos Nome, CPF, E-mail e Whats
+-para o produto energia, acrescentar DN e cia de energia
+-Na página principal o formulário está com todos esses campos. Seria possível criar uma formatação condicional para aparecer os campos DN e Cia de energia somente se o cliente escolher o produto energia?
+-Precisa colocar "concordo com a política de privacidade"
+
+Pix
+-nem todos os bancos trabalham com pix, então é melhor usar a expressão "dinheiro na conta"
+
+
+***PÁGINA HOME***
+
+Na seção "desde 2020"
+-trocar Dinheiro no Pix por Dinheiro na conta
+-na foto trocar pix recebido por dinheiro na conta
+-na foto trocar pix liberado hoje por dinheiro liberado hoje
+
+Na seção "como funciona"
+-trocar pix em 4 passos por crédito em 4 passos
+-04 (receba) tirar "no pix" deixar "dinheiro cai na sua conta"
+
+No "selo do compromisso"
+-corrigir.. "Bloqueia e fala" por "Bloqueia e fale"
+-deixa o botão "ligar grátis" branco com a letra preta
+
+Nas "histórias reais"
+-no google meu negócio temos avaliações positivas, conseguimos integrar com o site ou precisa ser inserida manualmente?
+
+No rodapé
+-corrigir "bloqueia, e fala" por "bloqueia e fale"
+-logo com crédito abaixo do nome Siga
+-redes sociais insta e face
+https://www.instagram.com/sigacredito
+https://www.facebook.com/sigacredito
+
+As páginas
+-privacidade, termos de uso, lgpd estão com uma observação para "revisão jurídica" quem fará isso? Vocês não tem um modelo padrão?
+
+Símbolo whats
+-vocês estão usando um balãozinho, não é possível colocar o símbolo do whats?
+
+
+***PÁGINA ENERGIA***
+
+Na primeira seção
+-trocar "pegue o dinheiro no pix" por "pegue o dinheiro
+-trocar "dinheiro no pix em até 24h" por "dinheiro em até 24h"
+
+Na seção "como funciona"
+-trocar "do simulador ao pix" por "do simulador ao dinheiro"
+-04 (receba) trocar "cai no pix" por "cai na sua conta"
+
+Na seção "vantagens"
+-rápido... tirar "no pix" por "dinheiro em até 24h"
+
+Na seção "atenção"
+-corrigir "denuncia e fala" por "denuncie e fale"
+
+Na seção "depoimentos"
+-é possível colocar avaliações do google?
+
+As informações regulatórias
+-na página tem duas
+-deixar apenas no rodapé
+
+No rodapé
+-corrigir "bloqueia, e fala" por "bloqueia e fale"
+-logo com crédito abaixo do nome siga
+-redes insta e face
+
+Símbolo whats
+-vocês estão usando um balãozinho, não é possível colocar o símbolo do whats?
+
+
+
+***PÁGINA BOLSA***
+
+Na primeira seção
+-Até 750,00
+-na foto tira "pix" trocar "dinheiro em 48h"
+
+Formulário
+-deixar apenas nome, cpf, whats e email
+
+Na seção "importante"
+-tirar "no pix"
+
+Na seção "como funciona"
+-trocar "no seu pix" por "na sua conta"
+-01 (simule) substituir o texto por "fale conosco e receba uma proposta no seu whatsapp"
+-04 (receba) trocar "dinheiro no pix" por "dinheiro na conta"
+
+Na seção "limites"
+-valor: até 750,00
+-Idade mínima 18 anos
+-Recebimento : depósito em conta
+
+Na seção "cuidado"
+-corrigir "em qualquer dúvida, fala" por Qualquer dúvida, fale"
+
+Na seção "depoimentos"
+-é possível colocar avaliações do google?
+
+Na seção "perguntas"
+-Valor: Até 750,00
+-simular: "Preencha o formulário, chama no whatsapp ou liga no 0800. A simulação é na hora."
+
+Informações regulatórias
+-tem duas, deixar apenas no rodapé
+
+Rodapé
+-corrigir... "bloqueia, e fala" por "bloqueia e fale"
+-logo com crédito abaixo do nome Siga
+-Redes Insta e Face
+
+Símbolo whats
+-vocês estão usando um balãozinho, não é possível colocar o símbolo do whats?
+
+
+***PÁGINA CLT***
+
+Formulário
+-deixar apenas nome, cpf, whats e email
+
+Na seção "depoimentos"
+-é possível colocar avaliações do google?
+
+Informações regulatórias
+-tem duas, deixar apenas no rodapé
+
+Rodapé
+-no aviso, corrigir "bloqueia, e fala" por "bloqueia e fale"
+-Logo com a palavra crédito abaixo do nome Siga
+-redes Insta e Face
+
+Símbolo whats
+-vocês estão usando um balãozinho, não é possível colocar o símbolo do whats?
+
+
+***PÁGINA FGTS***
+
+Aviso
+-corrigir... "bloqueia e fala" por "bloqueia e fale"
+
+Na seção "depoimentos"
+-é possível colocar avaliações do google?
+
+Informações regulatórias
+-tem duas, deixar apenas no rodapé
+
+Rodapé
+-no aviso, corrigir "bloqueia, e fala" por "bloqueia e fale"
+-Logo com a palavra crédito abaixo do nome Siga
+-redes Insta e Face
+
+
+***PÁGINA BLOG***
+
+Rodapé
+-no aviso, corrigir "bloqueia, e fala" por "bloqueia e fale"
+-Logo com a palavra crédito abaixo do nome Siga
+-redes Insta e Face
+
+
+***PÁGINA ARTIGOS***
+
+Na seção "pronto para simular"
+-substituir o botão do whats pelo formulário "quero simular"
+
+Rodapé
+-no aviso, corrigir "bloqueia, e fala" por "bloqueia e fale"
+-Logo com a palavra crédito abaixo do nome Siga
+-redes Insta e Face
+
+
+***PÁGINA SOBRE***
+
+Rodapé
+-no aviso, corrigir "bloqueia, e fala" por "bloqueia e fale"
+-Logo com a palavra crédito abaixo do nome Siga
+-redes Insta e Face
+
+
+***PÁGINA CONTATO***
+
+Na seção "whats por produto"
+-Valor do Bolsa Família é até R$ 750,00
+
+Na seção "endereço"
+-corrigir "escritório existe -" tirar o traço
+
+Endereço do Mapa
+https://maps.app.goo.gl/1tQ4FnuBs9cgMaBq7
+
+
+Rodapé
+-no aviso, corrigir "bloqueia, e fala" por "bloqueia e fale"
+-Logo com a palavra crédito abaixo do nome Siga
+-redes Insta e Face
+
